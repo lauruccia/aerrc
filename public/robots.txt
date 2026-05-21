@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Blocca aree admin e API interne
+Disallow: /admin/
+Disallow: /api/
+Disallow: /livewire/
+Disallow: /_ignition/
+
+# Evita duplicati da parametri query non significativi
+Disallow: /*?page=
+Allow: /voli
+Allow: /destinazioni
+Allow: /turismo
+Allow: /partner
+Allow: /servizi
+Allow: /aeroporto
+Allow: /contatti
+
+# Sitemap
+Sitemap: https://www.aeroportoreggiocalabria.it/sitemap.xml
+
+# Crawl-delay per bot meno prioritari
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /

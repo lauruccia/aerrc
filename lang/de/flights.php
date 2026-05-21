@@ -1,0 +1,20 @@
+<?php
+return [
+    'section_title'    => 'Flüge vom Tito Minniti',
+    'section_subtitle' => 'Echtzeit-Abflüge und Ankünfte am Flughafen Reggio Calabria.',
+    'updated_now'      => 'Gerade aktualisiert',
+    'departures'       => 'Abflüge',
+    'arrivals'         => 'Ankünfte',
+    'time'             => 'Zeit',
+    'destination'      => 'Ziel',
+    'airline'          => 'Fluggesellschaft',
+    'flight'           => 'Flug',
+    'status'           => 'Status',
+    'status_on_time'   => 'Pünktlich',
+    'status_delayed'   => ':min\' Verspätung',
+    'status_cancelled' => 'Gestrichen',
+    'loading'          => 'Flüge werden geladen...',
+    'no_flights'       => 'Derzeit keine Flüge verfügbar.',
+    'refresh'          => 'Aktualisieren',
+    'last_update'      => 'Letzte Aktualisierung: :time',
+];
