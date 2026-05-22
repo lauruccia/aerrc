@@ -7,10 +7,11 @@ deployment:
     - /bin/cp /home/aeroportorc/aerrc/public/index.cpanel.php /home/aeroportorc/public_html/index.php
     - /bin/chmod -R 775 /home/aeroportorc/aerrc/storage
     - /bin/chmod -R 775 /home/aeroportorc/aerrc/bootstrap/cache
-    - /usr/local/bin/composer install --working-dir=/home/aeroportorc/aerrc --no-dev --optimize-autoloader --no-interaction --quiet
-    - /usr/local/bin/php /home/aeroportorc/aerrc/artisan migrate --force --no-interaction
-    - /usr/local/bin/php /home/aeroportorc/aerrc/artisan config:cache
-    - /usr/local/bin/php /home/aeroportorc/aerrc/artisan route:cache
-    - /usr/local/bin/php /home/aeroportorc/aerrc/artisan view:cache
-    - /usr/local/bin/php /home/aeroportorc/aerrc/artisan optimize
+    - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan config:clear
+    - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan route:clear
+    - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan view:clear
+    - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan config:cache
+    - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan route:cache
+    - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan view:cache
+    - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan optimize
     - /bin/ln -sfn /home/aeroportorc/aerrc/storage/app/public /home/aeroportorc/public_html/storage
