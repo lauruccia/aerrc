@@ -144,8 +144,17 @@ class StaticPageController extends Controller
 
     public function sitemap(): Response
     {
-        $destinations    = Destination::select('slug', 'updated_at')->get();
-        $tourismArticles = TourismArticle::select('slug', 'updated_at')->get();
+        try {
+            $destinations = Destination::select('slug', 'updated_at')->get();
+        } catch (\Exception $e) {
+            $destinations = collect();
+        }
+
+        try {
+            $tourismArticles = TourismArticle::select('slug', 'updated_at')->get();
+        } catch (\Exception $e) {
+            $tourismArticles = collect();
+        }
 
         $xml = view('sitemap', compact('destinations', 'tourismArticles'))->render();
         return response($xml, 200)->header('Content-Type', 'application/xml');
