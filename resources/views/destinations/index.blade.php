@@ -54,11 +54,7 @@
                         <div class="p-4">
                             <p class="text-xs text-gray-400 mb-2">{{ $dest->airlines_string }}</p>
                             <div class="flex items-end justify-between">
-                                <div>
-                                    <span class="text-2xl font-black text-blue">da €{{ number_format($dest->price_from, 0) }}</span>
-                                    <span class="text-xs font-normal text-gray-400"> /persona</span>
-                                </div>
-                                <span class="text-sky text-sm font-semibold group-hover:translate-x-1 transition-transform inline-block">→</span>
+                                <span class="text-sky text-sm font-semibold group-hover:translate-x-1 transition-transform inline-block">Scopri →</span>
                             </div>
                         </div>
                     </a>

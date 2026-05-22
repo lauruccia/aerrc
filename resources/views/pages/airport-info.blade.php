@@ -88,9 +88,9 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             @foreach([
-                ['icon' => '🚌', 'title' => 'Autobus ATM', 'desc' => 'Linea 13 dal centro di Reggio Calabria. Fermata direttamente in aeroporto. Frequenza ogni 30 minuti.', 'detail' => '~25 min dal centro · €1,20'],
-                ['icon' => '🚕', 'title' => 'Taxi', 'desc' => 'Taxi autorizzati disponibili all\'uscita arrivi. Prenotazione consigliata nelle ore di punta.', 'detail' => '~10 min · tariffa fissa €15-20'],
-                ['icon' => '🚗', 'title' => 'Auto privata', 'desc' => 'Autostrada A2 uscita Reggio Calabria Sud, poi SS106 verso Ravagnese. Parcheggio disponibile.', 'detail' => 'Parcheggio da €5/giorno'],
+                ['icon' => '🚌', 'title' => 'Autobus ATM', 'desc' => 'Linea 13 dal centro di Reggio Calabria. Fermata direttamente in aeroporto. Frequenza ogni 30 minuti.', 'detail' => '~25 min dal centro'],
+                ['icon' => '🚕', 'title' => 'Taxi', 'desc' => 'Taxi autorizzati disponibili all\'uscita arrivi. Prenotazione consigliata nelle ore di punta.', 'detail' => '~10 min · tariffa fissa'],
+                ['icon' => '🚗', 'title' => 'Auto privata', 'desc' => 'Autostrada A2 uscita Reggio Calabria Sud, poi SS106 verso Ravagnese. Parcheggio disponibile.', 'detail' => 'Parcheggio disponibile'],
                 ['icon' => '🚆', 'title' => 'Treno + bus', 'desc' => 'Treno fino alla stazione Reggio Calabria Centrale, poi autobus ATM linea 13 per l\'aeroporto.', 'detail' => 'FS + ATM · consigliato'],
             ] as $t)
                 <div class="bg-offwhite rounded-2xl p-6">

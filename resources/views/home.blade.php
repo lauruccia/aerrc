@@ -104,10 +104,6 @@
                     </div>
                     <div class="p-4">
                         <p class="text-xs text-gray-400 mb-1">{{ $dest->airlines_string }}</p>
-                        <p class="text-xl font-black text-blue">
-                            da €{{ number_format($dest->price_from, 0) }}
-                            <span class="text-xs font-normal text-gray-400">/{{ __('destinations.per_person') }}</span>
-                        </p>
                     </div>
                 </a>
             @endforeach

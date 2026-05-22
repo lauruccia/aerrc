@@ -30,7 +30,7 @@
                     'icon' => '🅿️', 'bg' => 'bg-blue/10', 'color' => 'text-blue',
                     'title' => 'Parcheggi',
                     'desc' => 'Parcheggio a breve e lungo termine direttamente in aeroporto. Tariffe convenzionate per soste superiori a 24 ore. Parcheggio coperto disponibile.',
-                    'info' => ['🕐 Aperto 24/7', '💶 Da €5/giorno', '📍 Fronte aeroporto'],
+                    'info' => ['🕐 Aperto 24/7', '📍 Fronte aeroporto'],
                 ],
                 [
                     'icon' => '🚗', 'bg' => 'bg-gold/10', 'color' => 'text-gold',

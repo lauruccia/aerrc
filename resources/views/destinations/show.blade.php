@@ -75,9 +75,7 @@
             {{-- Sidebar prezzo --}}
             <div class="space-y-5">
                 <div class="bg-navy rounded-2xl p-6 text-white sticky top-24">
-                    <div class="text-white/60 text-sm mb-1">A partire da</div>
-                    <div class="text-5xl font-black text-gold mb-1">€{{ number_format($destination->price_from, 0) }}</div>
-                    <div class="text-white/60 text-sm mb-6">a persona, solo andata</div>
+                    <div class="text-white/60 text-sm mb-6">Cerca il tuo volo per {{ $destination->city }}</div>
                     <a href="https://www.google.com/flights?hl=it#flt=REG.{{ $destination->iata_code }}"
                        target="_blank" rel="noopener"
                        class="block w-full bg-gold text-navy text-center py-3.5 rounded-xl font-bold hover:bg-yellow-400 transition-colors">
