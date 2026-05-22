@@ -1,0 +1,45 @@
+---
+deployment:
+  tasks:
+    # ── 1. Copia tutta l'app nella cartella fuori da public_html ──────────────
+    - export APPPATH=/home/aeroportorc/aerrc/
+    - /bin/cp -R $CPANEL_BASE_INSTALL_DIR/* $APPPATH
+
+    # ── 2. Copia il contenuto di public/ dentro public_html/ ─────────────────
+    - /bin/cp -R $CPANEL_BASE_INSTALL_DIR/public/. /home/aeroportorc/public_html/
+
+    # ── 3. Scrivi index.php con percorsi assoluti corretti ────────────────────
+    - |
+      cat > /home/aeroportorc/public_html/index.php << 'EOF'
+      <?php
+      define('LARAVEL_START', microtime(true));
+      if (file_exists($maintenance = __DIR__.'/../aerrc/storage/framework/maintenance.php')) {
+          require $maintenance;
+      }
+      require __DIR__.'/../aerrc/vendor/autoload.php';
+      $app = require_once __DIR__.'/../aerrc/bootstrap/app.php';
+      $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+      $response = $kernel->handle(
+          $request = Illuminate\Http\Request::capture()
+      )->send();
+      $kernel->terminate($request, $response);
+      EOF
+
+    # ── 4. Dipendenze PHP (senza pacchetti dev) ────────────────────────────────
+    - cd $APPPATH && composer install --no-dev --optimize-autoloader --no-interaction
+
+    # ── 5. Permessi storage e bootstrap/cache ─────────────────────────────────
+    - chmod -R 775 $APPPATH/storage
+    - chmod -R 775 $APPPATH/bootstrap/cache
+
+    # ── 6. Migrazioni database ─────────────────────────────────────────────────
+    - cd $APPPATH && php artisan migrate --force
+
+    # ── 7. Cache Laravel ──────────────────────────────────────────────────────
+    - cd $APPPATH && php artisan config:cache
+    - cd $APPPATH && php artisan route:cache
+    - cd $APPPATH && php artisan view:cache
+    - cd $APPPATH && php artisan optimize
+
+    # ── 8. Symlink storage → public_html/storage ──────────────────────────────
+    - ln -sfn $APPPATH/storage/app/public /home/aeroportorc/public_html/storage || true
