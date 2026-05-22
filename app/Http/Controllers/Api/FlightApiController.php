@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\AviationStackService;
+use App\Services\HybridFlightService;
 use Illuminate\Http\JsonResponse;
 
 class FlightApiController extends Controller
 {
-    public function __construct(protected AviationStackService $service) {}
+    public function __construct(protected HybridFlightService $service) {}
 
     public function departures(): JsonResponse
     {

@@ -67,15 +67,15 @@
     /* Flight badge */
     .badge-on-time {
         @apply inline-block px-3 py-1 rounded-full text-xs font-bold
-               bg-green-500/20 text-green-400;
+               bg-emerald-500/25 text-emerald-300;
     }
     .badge-delayed {
         @apply inline-block px-3 py-1 rounded-full text-xs font-bold
-               bg-amber/20 text-amber;
+               bg-yellow-400/25 text-yellow-300;
     }
     .badge-cancelled {
         @apply inline-block px-3 py-1 rounded-full text-xs font-bold
-               bg-red-500/20 text-red-400;
+               bg-red-500/25 text-red-300;
     }
 
     /* Cards */

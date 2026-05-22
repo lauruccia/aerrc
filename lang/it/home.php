@@ -2,7 +2,7 @@
 
 return [
     'meta_title'       => 'Aeroporto Reggio Calabria — Il Gateway Digitale della Calabria',
-    'meta_description' => 'Voli in tempo reale, destinazioni, turismo e servizi dall\'Aeroporto Tito Minniti di Reggio Calabria. Il portale ufficiale per viaggiatori e turisti.',
+    'meta_description' => 'Voli in tempo reale, destinazioni, turismo e servizi dall\'Aeroporto Tito Minniti di Reggio Calabria. Portale turistico indipendente per viaggiatori e turisti.',
     'hero_badge'       => 'Il gateway digitale della Calabria',
     'hero_title'       => 'Benvenuto a<br><span class="text-gold">Reggio Calabria</span>',
     'hero_subtitle'    => 'Il portale unico per chi vola da e verso l\'Aeroporto Tito Minniti. Voli in tempo reale, itinerari, prenotazioni e tutto il meglio della Calabria.',

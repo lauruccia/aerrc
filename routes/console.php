@@ -20,3 +20,13 @@ Schedule::call(function () {
 Schedule::call(function () {
     Cache::forget('weather.reggiocalabria');
 })->everyThirtyMinutes()->name('clear-weather-cache');
+
+// ── Sincronizzazione voli reali da AirLabs ────────────────────
+// Ogni giorno alle 04:30 importa i voli del giorno nel DB.
+// La cache dei voli viene poi svuotata ogni 5 minuti (vedi sopra),
+// quindi il tabellone mostrerà i nuovi dati entro pochi minuti.
+Schedule::command('flights:sync')
+    ->dailyAt('04:30')
+    ->name('flights-sync-airlabs')
+    ->withoutOverlapping()
+    ->runInBackground();

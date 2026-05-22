@@ -1,0 +1,352 @@
+<svg viewBox="0 0 1440 810" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- Sky gradient -->
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#060f1e"/>
+      <stop offset="35%" stop-color="#0d1f3c"/>
+      <stop offset="70%" stop-color="#1a3a6b"/>
+      <stop offset="100%" stop-color="#2a5a8a"/>
+    </linearGradient>
+
+    <!-- Golden glow gradient for glass facade -->
+    <linearGradient id="glassGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.15"/>
+      <stop offset="40%" stop-color="#e2c97e" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.08"/>
+    </linearGradient>
+
+    <!-- Glass facade gradient -->
+    <linearGradient id="glassFacade" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#1a3d6b" stop-opacity="0.9"/>
+      <stop offset="30%" stop-color="#c9a84c" stop-opacity="0.2"/>
+      <stop offset="60%" stop-color="#1a4a8a" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#0d2a52" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <!-- Terminal building gradient -->
+    <linearGradient id="terminalGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#152a52"/>
+      <stop offset="100%" stop-color="#0a1628"/>
+    </linearGradient>
+
+    <!-- Runway gradient -->
+    <linearGradient id="runwayGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1f3c"/>
+      <stop offset="100%" stop-color="#060d1a"/>
+    </linearGradient>
+
+    <!-- Mountain gradient -->
+    <linearGradient id="mountainGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3355" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0d1f3c" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <!-- Sea/Stretto gradient -->
+    <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a4a7a"/>
+      <stop offset="100%" stop-color="#0d2a4a"/>
+    </linearGradient>
+
+    <!-- Glow filter for lights -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="glassBlur">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+
+    <!-- Ambient light reflection on glass -->
+    <radialGradient id="ambientLight" cx="0.5" cy="0.3" r="0.6">
+      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Clip path for glass panels -->
+    <clipPath id="glassClip">
+      <polygon points="200,460 1240,420 1240,700 200,700"/>
+    </clipPath>
+  </defs>
+
+  <!-- ===== SKY ===== -->
+  <rect width="1440" height="810" fill="url(#sky)"/>
+
+  <!-- Stars -->
+  <circle cx="120" cy="60" r="1.2" fill="white" opacity="0.7"/>
+  <circle cx="280" cy="30" r="0.8" fill="white" opacity="0.5"/>
+  <circle cx="450" cy="80" r="1" fill="white" opacity="0.6"/>
+  <circle cx="650" cy="25" r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="820" cy="55" r="0.9" fill="white" opacity="0.7"/>
+  <circle cx="990" cy="35" r="1.1" fill="white" opacity="0.5"/>
+  <circle cx="1150" cy="70" r="0.8" fill="white" opacity="0.6"/>
+  <circle cx="1320" cy="40" r="1.3" fill="white" opacity="0.4"/>
+  <circle cx="75"  cy="130" r="0.7" fill="white" opacity="0.5"/>
+  <circle cx="380" cy="150" r="1.0" fill="white" opacity="0.4"/>
+  <circle cx="560" cy="110" r="0.8" fill="white" opacity="0.6"/>
+  <circle cx="780" cy="140" r="1.2" fill="white" opacity="0.3"/>
+  <circle cx="1050" cy="120" r="0.9" fill="white" opacity="0.5"/>
+  <circle cx="1280" cy="100" r="1.0" fill="white" opacity="0.4"/>
+  <circle cx="200" cy="180" r="0.6" fill="white" opacity="0.5"/>
+  <circle cx="920" cy="90" r="0.8" fill="white" opacity="0.6"/>
+
+  <!-- Moon glow -->
+  <circle cx="1300" cy="120" r="60" fill="#c9a84c" opacity="0.04"/>
+  <circle cx="1300" cy="120" r="35" fill="#e2c97e" opacity="0.07"/>
+  <circle cx="1300" cy="120" r="18" fill="#f0d898" opacity="0.55"/>
+  <circle cx="1300" cy="120" r="14" fill="#f5e4b0" opacity="0.85"/>
+
+  <!-- Horizon atmospheric glow -->
+  <ellipse cx="720" cy="360" rx="580" ry="80" fill="#1a4a8a" opacity="0.25"/>
+
+  <!-- ===== MOUNTAINS / ASPROMONTE (background) ===== -->
+  <polygon points="0,460 120,320 250,390 380,300 500,380 620,290 720,350 840,280 960,350 1080,310 1200,380 1320,310 1440,370 1440,520 0,520"
+           fill="url(#mountainGrad)" opacity="0.75"/>
+  <!-- Mountain ridgeline highlight -->
+  <polyline points="0,460 120,320 250,390 380,300 500,380 620,290 720,350 840,280 960,350 1080,310 1200,380 1320,310 1440,370"
+            fill="none" stroke="#2a4a7a" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- ===== SEA — STRETTO DI MESSINA ===== -->
+  <rect x="0" y="480" width="1440" height="60" fill="url(#seaGrad)" opacity="0.5"/>
+  <!-- Sea shimmer lines -->
+  <line x1="0" y1="490" x2="1440" y2="488" stroke="#3a7aaa" stroke-width="0.8" opacity="0.3"/>
+  <line x1="0" y1="500" x2="1440" y2="503" stroke="#3a7aaa" stroke-width="0.5" opacity="0.2"/>
+  <line x1="0" y1="515" x2="1440" y2="512" stroke="#3a7aaa" stroke-width="0.7" opacity="0.25"/>
+  <!-- Moonlight on water -->
+  <ellipse cx="1300" cy="505" rx="90" ry="8" fill="#e2c97e" opacity="0.12"/>
+
+  <!-- ===== GROUND / APRON ===== -->
+  <rect x="0" y="530" width="1440" height="280" fill="url(#runwayGrad)"/>
+
+  <!-- Runway markings -->
+  <!-- Runway surface -->
+  <rect x="580" y="560" width="280" height="200" fill="#0a1828" rx="2"/>
+  <!-- Center line dashes -->
+  <rect x="717" y="575" width="6" height="28" fill="#c9a84c" opacity="0.6" rx="1"/>
+  <rect x="717" y="618" width="6" height="28" fill="#c9a84c" opacity="0.6" rx="1"/>
+  <rect x="717" y="661" width="6" height="28" fill="#c9a84c" opacity="0.6" rx="1"/>
+  <rect x="717" y="704" width="6" height="24" fill="#c9a84c" opacity="0.6" rx="1"/>
+  <!-- Runway edge lights -->
+  <circle cx="585" cy="572" r="3" fill="#c9a84c" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="585" cy="610" r="3" fill="#c9a84c" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="585" cy="648" r="3" fill="#c9a84c" opacity="0.7" filter="url(#glow)"/>
+  <circle cx="585" cy="686" r="3" fill="#c9a84c" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="855" cy="572" r="3" fill="#c9a84c" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="855" cy="610" r="3" fill="#c9a84c" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="855" cy="648" r="3" fill="#c9a84c" opacity="0.7" filter="url(#glow)"/>
+  <circle cx="855" cy="686" r="3" fill="#c9a84c" opacity="0.8" filter="url(#glow)"/>
+
+  <!-- Apron taxiway lights -->
+  <circle cx="200" cy="600" r="2.5" fill="#3a8aff" opacity="0.7"/>
+  <circle cx="270" cy="598" r="2.5" fill="#3a8aff" opacity="0.7"/>
+  <circle cx="340" cy="600" r="2.5" fill="#3a8aff" opacity="0.7"/>
+  <circle cx="1100" cy="598" r="2.5" fill="#3a8aff" opacity="0.7"/>
+  <circle cx="1170" cy="600" r="2.5" fill="#3a8aff" opacity="0.7"/>
+  <circle cx="1240" cy="598" r="2.5" fill="#3a8aff" opacity="0.7"/>
+
+  <!-- Taxiway yellow line -->
+  <path d="M 0,620 Q 400,610 580,600 L 860,600 Q 1000,608 1440,618"
+        fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="20,12" opacity="0.4"/>
+
+  <!-- ===== MAIN TERMINAL BUILDING ===== -->
+  <!-- Terminal base / foundation -->
+  <rect x="140" y="445" width="1160" height="20" fill="#0a1828" opacity="0.9"/>
+
+  <!-- Main terminal body -->
+  <polygon points="140,465 180,390 1260,390 1300,465" fill="url(#terminalGrad)"/>
+
+  <!-- ===== INCLINED GLASS FACADE — centrepiece of new terminal ===== -->
+  <!-- Large inclined glass curtain wall: the characteristic feature of the new terminal -->
+  <!-- Central glass volume — inclined forward -->
+  <polygon points="340,390 1100,390 1120,465 320,465" fill="url(#glassFacade)" opacity="0.95"/>
+
+  <!-- Glass panel grid lines — vertical -->
+  <line x1="380" y1="390" x2="363" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="440" y1="390" x2="421" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="500" y1="390" x2="479" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="560" y1="390" x2="537" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="620" y1="390" x2="595" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="680" y1="390" x2="653" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="740" y1="390" x2="711" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="800" y1="390" x2="769" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="860" y1="390" x2="827" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="920" y1="390" x2="885" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="980" y1="390" x2="943" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+  <line x1="1040" y1="390" x2="1001" y2="465" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+
+  <!-- Glass panel grid lines — horizontal -->
+  <line x1="335" y1="405" x2="1103" y2="405" stroke="#e2c97e" stroke-width="0.5" opacity="0.25"/>
+  <line x1="330" y1="420" x2="1106" y2="420" stroke="#e2c97e" stroke-width="0.5" opacity="0.25"/>
+  <line x1="326" y1="435" x2="1110" y2="435" stroke="#e2c97e" stroke-width="0.5" opacity="0.25"/>
+  <line x1="323" y1="450" x2="1113" y2="450" stroke="#e2c97e" stroke-width="0.5" opacity="0.25"/>
+
+  <!-- Glass reflection — warm golden glow from interior lighting -->
+  <polygon points="340,390 1100,390 1120,465 320,465" fill="url(#ambientLight)"/>
+
+  <!-- Interior warm light bleeding through glass — lit sections -->
+  <polygon points="380,390 440,390 421,465 361,465" fill="#c9a84c" opacity="0.09"/>
+  <polygon points="560,390 680,390 655,465 537,465" fill="#e2c97e" opacity="0.11"/>
+  <polygon points="760,390 880,390 847,465 727,465" fill="#c9a84c" opacity="0.08"/>
+  <polygon points="960,390 1040,390 1001,465 921,465" fill="#e2c97e" opacity="0.10"/>
+
+  <!-- ===== TERMINAL ROOF ===== -->
+  <!-- Main roof slab -->
+  <polygon points="140,390 180,360 1260,360 1300,390" fill="#0f2244"/>
+  <!-- Roof edge detail -->
+  <line x1="140" y1="390" x2="1300" y2="390" stroke="#c9a84c" stroke-width="1.2" opacity="0.45"/>
+  <!-- Roof fascia / overhang detail -->
+  <polygon points="160,380 1280,380 1300,390 140,390" fill="#0a1828" opacity="0.5"/>
+
+  <!-- Roof accent line -->
+  <line x1="180" y1="362" x2="1260" y2="362" stroke="#c9a84c" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- ===== CONTROL TOWER ===== -->
+  <!-- Tower shaft -->
+  <rect x="1220" y="270" width="28" height="120" fill="#0f2244"/>
+  <!-- Tower cab (glass cab at top) -->
+  <rect x="1208" y="255" width="52" height="32" fill="#1a3d6b" rx="2"/>
+  <rect x="1211" y="258" width="46" height="26" fill="#2a5a8a" opacity="0.8" rx="1"/>
+  <!-- Tower cab glass glow -->
+  <rect x="1213" y="260" width="42" height="22" fill="#c9a84c" opacity="0.15" rx="1"/>
+  <!-- Tower cab window lines -->
+  <line x1="1225" y1="258" x2="1225" y2="284" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+  <line x1="1237" y1="258" x2="1237" y2="284" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+  <line x1="1249" y1="258" x2="1249" y2="284" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+  <!-- Tower beacon -->
+  <circle cx="1234" cy="252" r="5" fill="#c9a84c" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="1234" cy="252" r="9" fill="#e2c97e" opacity="0.2" filter="url(#softGlow)"/>
+  <!-- Tower base -->
+  <rect x="1226" y="388" width="16" height="12" fill="#0a1828"/>
+
+  <!-- ===== SECONDARY WINGS ===== -->
+  <!-- Left wing (lower, older section transitioning) -->
+  <polygon points="140,465 180,410 340,410 320,465" fill="#0f2040" opacity="0.9"/>
+  <line x1="180" y1="410" x2="340" y2="410" stroke="#1a3a6b" stroke-width="1" opacity="0.5"/>
+  <!-- Small windows left wing -->
+  <rect x="205" y="420" width="22" height="14" fill="#1a4a8a" opacity="0.5" rx="1"/>
+  <rect x="240" y="420" width="22" height="14" fill="#c9a84c" opacity="0.12" rx="1"/>
+  <rect x="275" y="420" width="22" height="14" fill="#1a4a8a" opacity="0.5" rx="1"/>
+
+  <!-- Right wing -->
+  <polygon points="1100,410 1260,410 1300,465 1120,465" fill="#0f2040" opacity="0.9"/>
+  <line x1="1100" y1="410" x2="1260" y2="410" stroke="#1a3a6b" stroke-width="1" opacity="0.5"/>
+  <!-- Small windows right wing -->
+  <rect x="1145" y="420" width="22" height="14" fill="#1a4a8a" opacity="0.5" rx="1"/>
+  <rect x="1180" y="420" width="22" height="14" fill="#c9a84c" opacity="0.12" rx="1"/>
+  <rect x="1215" y="420" width="22" height="14" fill="#1a4a8a" opacity="0.5" rx="1"/>
+
+  <!-- ===== GATE BRIDGES / JETWAYS ===== -->
+  <!-- Gate 1 -->
+  <rect x="380" y="462" width="50" height="18" fill="#0a1828" rx="2"/>
+  <rect x="426" y="468" width="4" height="80" fill="#0a1828" rx="1"/>
+  <!-- Gate 2 -->
+  <rect x="530" y="462" width="50" height="18" fill="#0a1828" rx="2"/>
+  <rect x="576" y="468" width="4" height="80" fill="#0a1828" rx="1"/>
+  <!-- Gate 3 -->
+  <rect x="680" y="462" width="50" height="18" fill="#0a1828" rx="2"/>
+  <rect x="726" y="468" width="4" height="80" fill="#0a1828" rx="1"/>
+  <!-- Gate 4 -->
+  <rect x="830" y="462" width="50" height="18" fill="#0a1828" rx="2"/>
+  <rect x="876" y="468" width="4" height="80" fill="#0a1828" rx="1"/>
+  <!-- Gate 5 -->
+  <rect x="980" y="462" width="50" height="18" fill="#0a1828" rx="2"/>
+  <rect x="1026" y="468" width="4" height="80" fill="#0a1828" rx="1"/>
+
+  <!-- Gate labels -->
+  <text x="399" y="475" font-family="'Helvetica Neue', sans-serif" font-size="7" fill="#c9a84c" opacity="0.8" text-anchor="middle">G1</text>
+  <text x="549" y="475" font-family="'Helvetica Neue', sans-serif" font-size="7" fill="#c9a84c" opacity="0.8" text-anchor="middle">G2</text>
+  <text x="699" y="475" font-family="'Helvetica Neue', sans-serif" font-size="7" fill="#c9a84c" opacity="0.8" text-anchor="middle">G3</text>
+  <text x="849" y="475" font-family="'Helvetica Neue', sans-serif" font-size="7" fill="#c9a84c" opacity="0.8" text-anchor="middle">G4</text>
+  <text x="999" y="475" font-family="'Helvetica Neue', sans-serif" font-size="7" fill="#c9a84c" opacity="0.8" text-anchor="middle">G5</text>
+
+  <!-- ===== AIRCRAFT ON APRON ===== -->
+  <!-- Aircraft 1 — at gate 2 area -->
+  <!-- Fuselage -->
+  <ellipse cx="430" cy="560" rx="72" ry="12" fill="#152a4e" opacity="0.9" transform="rotate(-5,430,560)"/>
+  <!-- Wings -->
+  <polygon points="390,556 480,556 510,590 490,590" fill="#0f2040" opacity="0.85"/>
+  <polygon points="380,556 470,556 340,590 360,590" fill="#0f2040" opacity="0.85"/>
+  <!-- Tail -->
+  <polygon points="490,548 510,530 522,548" fill="#0f2040" opacity="0.85"/>
+  <!-- Wing lights -->
+  <circle cx="510" cy="590" r="2.5" fill="#ff4444" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="340" cy="590" r="2.5" fill="#44ff44" opacity="0.8" filter="url(#glow)"/>
+
+  <!-- Aircraft 2 — parked right side -->
+  <ellipse cx="1020" cy="575" rx="68" ry="11" fill="#152a4e" opacity="0.85" transform="rotate(8,1020,575)"/>
+  <polygon points="980,571 1060,571 1090,604 1068,604" fill="#0f2040" opacity="0.85"/>
+  <polygon points="970,571 1050,571 940,604 962,604" fill="#0f2040" opacity="0.85"/>
+  <polygon points="1075,563 1092,545 1104,563" fill="#0f2040" opacity="0.85"/>
+  <circle cx="1090" cy="604" r="2.5" fill="#ff4444" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="940" cy="604" r="2.5" fill="#44ff44" opacity="0.8" filter="url(#glow)"/>
+
+  <!-- ===== APRON GROUND EQUIPMENT ===== -->
+  <!-- Luggage cart train — left -->
+  <rect x="290" y="590" width="32" height="14" fill="#1a3a6b" rx="2" opacity="0.8"/>
+  <rect x="328" y="592" width="24" height="12" fill="#1a3a6b" rx="2" opacity="0.7"/>
+  <rect x="358" y="592" width="24" height="12" fill="#1a3a6b" rx="2" opacity="0.6"/>
+  <!-- Wheels -->
+  <circle cx="296" cy="604" r="3" fill="#0a1020" opacity="0.9"/>
+  <circle cx="318" cy="604" r="3" fill="#0a1020" opacity="0.9"/>
+
+  <!-- Ground crew vehicle -->
+  <rect x="1100" y="616" width="40" height="20" fill="#c9a84c" opacity="0.35" rx="3"/>
+  <circle cx="1108" cy="636" r="4" fill="#0a1020" opacity="0.8"/>
+  <circle cx="1132" cy="636" r="4" fill="#0a1020" opacity="0.8"/>
+
+  <!-- ===== PERIMETER LIGHTS & NAVIGATION AIDS ===== -->
+  <!-- Approach light bar -->
+  <circle cx="720" cy="745" r="4" fill="white" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="720" cy="720" r="3.5" fill="white" opacity="0.7" filter="url(#glow)"/>
+  <circle cx="720" cy="697" r="3" fill="white" opacity="0.6" filter="url(#glow)"/>
+  <circle cx="720" cy="678" r="2.5" fill="white" opacity="0.55" filter="url(#glow)"/>
+
+  <!-- Perimeter fence lights -->
+  <circle cx="155" cy="540" r="2" fill="#c9a84c" opacity="0.5"/>
+  <circle cx="155" cy="580" r="2" fill="#c9a84c" opacity="0.5"/>
+  <circle cx="155" cy="620" r="2" fill="#c9a84c" opacity="0.5"/>
+  <circle cx="1285" cy="540" r="2" fill="#c9a84c" opacity="0.5"/>
+  <circle cx="1285" cy="580" r="2" fill="#c9a84c" opacity="0.5"/>
+  <circle cx="1285" cy="620" r="2" fill="#c9a84c" opacity="0.5"/>
+
+  <!-- ===== FOREGROUND GROUND DETAIL ===== -->
+  <!-- Ground perspective lines -->
+  <line x1="0" y1="700" x2="1440" y2="660" stroke="#0d2a4a" stroke-width="1" opacity="0.3"/>
+  <line x1="0" y1="760" x2="1440" y2="720" stroke="#0a1828" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- ===== AMBIENT ATMOSPHERE ===== -->
+  <!-- Subtle golden atmospheric glow above terminal -->
+  <ellipse cx="720" cy="385" rx="400" ry="30" fill="#c9a84c" opacity="0.06"/>
+  <!-- Interior light spill from terminal entrance -->
+  <ellipse cx="720" cy="465" rx="200" ry="15" fill="#e2c97e" opacity="0.08"/>
+
+  <!-- ===== TERMINAL ENTRANCE CANOPY ===== -->
+  <polygon points="540,465 900,465 920,480 520,480" fill="#0a1828" opacity="0.9"/>
+  <!-- Canopy support pillars -->
+  <rect x="548" y="465" width="8" height="30" fill="#0d2040" opacity="0.8"/>
+  <rect x="640" y="465" width="8" height="30" fill="#0d2040" opacity="0.8"/>
+  <rect x="720" y="465" width="8" height="30" fill="#0d2040" opacity="0.8"/>
+  <rect x="800" y="465" width="8" height="30" fill="#0d2040" opacity="0.8"/>
+  <rect x="884" y="465" width="8" height="30" fill="#0d2040" opacity="0.8"/>
+  <!-- Entrance doors light -->
+  <rect x="680" y="465" width="80" height="15" fill="#e2c97e" opacity="0.15" rx="1"/>
+
+  <!-- ===== INAUGURATION BANNER LIGHT (subtle) ===== -->
+  <!-- Soft warm light pool at entrance -->
+  <ellipse cx="720" cy="480" rx="120" ry="20" fill="#c9a84c" opacity="0.07"/>
+
+  <!-- ===== SICILY COAST SILHOUETTE — Stretto di Messina ===== -->
+  <polygon points="0,470 80,440 160,455 240,435 300,450 380,430 440,448 520,432 600,445 650,430 700,438 750,430 800,440 850,428 920,442 980,432 1040,445 1100,435 1160,448 1220,438 1280,450 1340,440 1400,452 1440,445 1440,490 0,490"
+           fill="#0a1a30" opacity="0.5"/>
+
+  <!-- ===== VIGNETTE OVERLAY ===== -->
+  <radialGradient id="vignette" cx="0.5" cy="0.5" r="0.7">
+    <stop offset="0%" stop-color="black" stop-opacity="0"/>
+    <stop offset="100%" stop-color="black" stop-opacity="0.55"/>
+  </radialGradient>
+  <rect width="1440" height="810" fill="url(#vignette)"/>
+
+</svg>

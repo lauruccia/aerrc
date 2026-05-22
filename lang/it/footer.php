@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'description' => 'Il portale ufficiale dell\'Aeroporto Tito Minniti di Reggio Calabria. Voli, turismo e servizi per viaggiatori e turisti in Calabria.',
+    'description' => 'Portale turistico indipendente su voli, turismo e servizi per viaggiatori e turisti in Calabria. Non affiliato all\'Aeroporto Tito Minniti né a SACAL S.p.A.',
     'quick_links' => 'Link Rapidi',
     'info'        => 'Informazioni',
     'rights'      => 'Tutti i diritti riservati',

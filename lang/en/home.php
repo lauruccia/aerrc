@@ -2,7 +2,7 @@
 
 return [
     'meta_title'       => 'Reggio Calabria Airport — The Digital Gateway to Calabria',
-    'meta_description' => 'Real-time flights, destinations, tourism and services at Tito Minniti Airport, Reggio Calabria. The official portal for travellers and tourists.',
+    'meta_description' => 'Real-time flights, destinations, tourism and services at Tito Minniti Airport, Reggio Calabria. Independent travel portal for visitors and tourists.',
     'hero_badge'       => 'The digital gateway to Calabria',
     'hero_title'       => 'Welcome to<br><span class="text-gold">Reggio Calabria</span>',
     'hero_subtitle'    => 'The one-stop portal for travellers flying to and from Tito Minniti Airport. Real-time flights, itineraries, bookings and the best of Calabria.',

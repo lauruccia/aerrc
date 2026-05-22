@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Services\AviationStackService;
+use App\Services\HybridFlightService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -33,19 +33,22 @@ class FlightBoard extends Component
      */
     public function refresh(): void
     {
-        cache()->forget("flights.departures.REG");
-        cache()->forget("flights.arrivals.REG");
+        // Svuota sia la cache degli orari DB (non necessaria, sono statici)
+        // sia la cache dello stato live API
+        $iata = config('aviationstack.airport_iata', 'REG');
+        cache()->forget("flight_status.departure.{$iata}");
+        cache()->forget("flight_status.arrival.{$iata}");
         $this->lastUpdate = now()->format('H:i');
     }
 
     /**
-     * Chiamato automaticamente da wire:poll — aggiorna solo se autoRefresh attivo.
+     * Chiamato automaticamente da wire:poll — aggiorna stato live se autoRefresh attivo.
      */
     public function poll(): void
     {
         if ($this->autoRefresh) {
-            cache()->forget("flights.{$this->tab}.REG");
             $this->lastUpdate = now()->format('H:i');
+            // Il render rilancia HybridFlightService che usa la cache interna
         }
     }
 
@@ -54,7 +57,7 @@ class FlightBoard extends Component
         $this->autoRefresh = ! $this->autoRefresh;
     }
 
-    public function render(AviationStackService $service)
+    public function render(HybridFlightService $service)
     {
         $flights = match($this->tab) {
             'arrivals' => $service->getArrivals(),

@@ -1,4 +1,11 @@
 <div wire:poll.{{ $pollInterval }}ms="poll">
+    <style>
+        .badge-on-time   { background: rgba(16,185,129,.22);  color: #6ee7b7; font-weight:700; }
+        .badge-active    { background: rgba(59,130,246,.25);  color: #93c5fd; font-weight:700; }
+        .badge-landed    { background: rgba(139,92,246,.25);  color: #c4b5fd; font-weight:700; }
+        .badge-delayed   { background: rgba(250,204,21,.22);  color: #fde047; font-weight:700; }
+        .badge-cancelled { background: rgba(239,68,68,.22);   color: #fca5a5; font-weight:700; }
+    </style>
     {{-- Tabs + controlli --}}
     <div class="flex items-center gap-3 mb-6 flex-wrap">
         <button wire:click="switchTab('departures')"
@@ -105,7 +112,7 @@
                             {{ $flight['status_badge']['label'] }}
                         </span>
                         @if($flight['actual_time'] && $flight['actual_time'] !== $flight['scheduled_time'])
-                            <div class="text-xs text-white/40 mt-1">Atterrato/Partito: {{ $flight['actual_time'] }}</div>
+                            <div class="text-xs text-white/65 mt-1">Atterrato/Partito: {{ $flight['actual_time'] }}</div>
                         @endif
                     </div>
                 </div>

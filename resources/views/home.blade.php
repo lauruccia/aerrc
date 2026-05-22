@@ -8,14 +8,19 @@
 {{-- ════════════════════════════════════════════════════════
      HERO
      ════════════════════════════════════════════════════════ --}}
-<section class="relative min-h-screen bg-hero overflow-hidden flex flex-col justify-center px-4 pt-24 pb-16">
+<section class="relative min-h-screen overflow-hidden flex flex-col justify-center px-4 pt-24 pb-16" style="background:#060f1e;">
 
-    {{-- Background SVG blobs --}}
+    {{-- Illustrazione nuovo terminal 2026 come sfondo --}}
     <div class="absolute inset-0 pointer-events-none">
-        <svg class="absolute w-full h-full" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="900" cy="200" rx="500" ry="300" fill="#1A5276" opacity="0.3"/>
-            <ellipse cx="200" cy="500" rx="350" ry="200" fill="#0a3d6b" opacity="0.4"/>
-        </svg>
+        <img
+            src="/img/hero-nuovo-terminal.svg"
+            alt="Nuovo Terminal Aeroporto Tito Minniti di Reggio Calabria inaugurato maggio 2026"
+            class="absolute inset-0 w-full h-full object-cover"
+            style="opacity:0.92;"
+            loading="eager"
+        >
+        {{-- Overlay gradient per leggibilità testo --}}
+        <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(6,15,30,0.08) 0%, rgba(6,15,30,0.18) 40%, rgba(6,15,30,0.70) 78%, rgba(6,15,30,0.90) 100%);"></div>
     </div>
 
     <div class="relative z-10 max-w-7xl mx-auto w-full">
@@ -126,7 +131,7 @@
         <p class="text-gray-500 text-lg mb-10 max-w-xl">{{ __('tourism.section_subtitle') }}</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @foreach($tourismArticles->take(3) as $index => $article)
+            @foreach($tourismArticles->take(4) as $index => $article)
                 <a href="{{ route('tourism.show', $article->slug) }}"
                    class="bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.08)] card-hover block
                           {{ $index === 0 ? 'md:col-span-2' : '' }}">
@@ -202,7 +207,6 @@
                     <div class="text-5xl mb-4">{{ $partner['icon'] }}</div>
                     <h3 class="text-white font-bold mb-2">{{ $partner['name'] }}</h3>
                     <p class="text-white/60 text-sm leading-relaxed mb-4">{{ $partner['desc'] }}</p>
-                    <p class="text-gold font-bold mb-4">{{ $partner['price'] }}</p>
                     <a href="{{ route('partners') }}" class="block bg-gold text-navy py-2 px-5 rounded-lg font-bold text-sm hover:bg-yellow-400 transition-colors">
                         {{ __('partners.discover') }}
                     </a>

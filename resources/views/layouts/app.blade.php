@@ -133,8 +133,11 @@
     }
     </script>
 
-    {{-- Favicon --}}
+    {{-- Favicon & Brand Icons --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/favicon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('img/logo-mark.svg') }}">
+    <meta name="theme-color" content="#0D2347">
+    <meta name="msapplication-TileColor" content="#0D2347">
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -149,6 +152,49 @@
 
     {{-- Page-specific head --}}
     @stack('head')
+
+    {{-- ══════════════════════════════════════════════════════════════
+         GOOGLE ANALYTICS 4 + CONSENT MODE v2  (GDPR / Garante IT)
+         ══════════════════════════════════════════════════════════════
+         ⚠️  ISTRUZIONI PER L'ATTIVAZIONE:
+             1. Vai su https://analytics.google.com
+             2. Crea una nuova Property (tipo "Web")
+             3. In Admin → Data Streams → Web ottieni il Measurement ID
+                nel formato  G-XXXXXXXXXX
+             4. Sostituisci ENTRAMBE le occorrenze di G-XXXXXXXXXX
+                qui sotto con il tuo ID reale
+             5. Salva il file — GA4 inizierà a raccogliere dati
+         ══════════════════════════════════════════════════════════════ --}}
+    @php
+        // Legge il consenso già salvato (se l'utente ha già visitato il sito)
+        $arcConsent         = $_COOKIE['arc_cookie_consent'] ?? null;
+        $analyticsGranted   = ($arcConsent === 'all') ? 'granted' : 'denied';
+    @endphp
+
+    {{-- Google Consent Mode v2 — DEVE stare prima del tag gtag.js --}}
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+
+        // Default: tutto negato. Viene aggiornato dal banner o se già consento.
+        gtag('consent', 'default', {
+            'analytics_storage':  '{{ $analyticsGranted }}',
+            'ad_storage':         'denied',
+            'ad_user_data':       'denied',
+            'ad_personalization': 'denied',
+            'wait_for_update':    500
+        });
+        gtag('js', new Date());
+    </script>
+
+    {{-- Tag Google Analytics — sostituire G-XXXXXXXXXX con il tuo Measurement ID --}}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        gtag('config', 'G-XXXXXXXXXX', {
+            'anonymize_ip': true     // anonimizza IP (best practice GDPR)
+        });
+    </script>
+    {{-- ══════════════════════════════════════════════════════════════ --}}
 </head>
 <body class="font-sans bg-offwhite text-navy-dark antialiased">
 
@@ -162,10 +208,10 @@
 
             {{-- Brand --}}
             <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0">
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-sky to-gold flex items-center justify-center text-xl">✈️</div>
+                <img src="{{ asset('img/logo-mark.svg') }}" alt="ARC Aeroporto Reggio Calabria" class="w-12 h-12 rounded-lg">
                 <div>
                     <div class="text-white font-bold text-sm leading-tight">Aeroporto Reggio Calabria</div>
-                    <div class="text-gold text-[0.68rem] font-normal">aeroportoreggiocalabria.it</div>
+                    <div class="text-gold text-[0.68rem] font-normal tracking-wider">VOLI · TURISMO · CALABRIA</div>
                 </div>
             </a>
 
@@ -257,12 +303,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
                 <div class="md:col-span-2">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-sky to-gold flex items-center justify-center text-xl">✈️</div>
-                        <div>
-                            <div class="text-white font-bold">Aeroporto Reggio Calabria</div>
-                            <div class="text-gold text-xs">aeroportoreggiocalabria.it</div>
-                        </div>
+                    <div class="mb-5">
+                        <img src="{{ asset('img/logo-full.svg') }}" alt="Aeroporto Reggio Calabria" class="h-16 w-auto">
                     </div>
                     <p class="text-sm leading-relaxed max-w-xs">
                         {{ __('footer.description') }}
@@ -287,6 +329,8 @@
                     <h4 class="text-white text-sm font-bold mb-4">{{ __('footer.info') }}</h4>
                     <nav class="space-y-2.5 text-sm">
                         <a href="{{ route('partners') }}" class="block hover:text-gold transition-colors">{{ __('nav.partners') }}</a>
+                        <a href="{{ route('become-partner') }}" class="block hover:text-gold transition-colors">Diventa Partner</a>
+                        <a href="{{ route('media-kit') }}" class="block hover:text-gold transition-colors">Media Kit</a>
                         <a href="{{ route('contact') }}" class="block hover:text-gold transition-colors">{{ __('nav.contact') }}</a>
                         <a href="{{ route('privacy') }}" class="block hover:text-gold transition-colors">Privacy Policy</a>
                         <a href="{{ route('cookies') }}" class="block hover:text-gold transition-colors">Cookie Policy</a>
@@ -309,5 +353,201 @@
     @livewireScripts
 
     @stack('scripts')
+
+    {{-- ══════════════════════════════════════════════════════════════
+         COOKIE CONSENT BANNER
+         Conforme: GDPR UE 2016/679 · D.Lgs. 196/2003 · Linee guida
+         Garante Privacy italiano (provvedimento 8 gen 2022)
+         ══════════════════════════════════════════════════════════════ --}}
+
+    {{-- Banner principale --}}
+    <div id="cookie-banner"
+         style="display:none"
+         role="dialog"
+         aria-modal="true"
+         aria-label="Consenso cookie"
+         class="fixed bottom-0 inset-x-0 z-[9999] bg-navy-dark border-t-2 border-gold/40 shadow-[0_-4px_40px_rgba(0,0,0,0.5)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+
+                {{-- Testo informativo --}}
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm text-white leading-relaxed">
+                        <strong class="text-gold">🍪 Informativa cookie</strong> —
+                        Utilizziamo <strong class="text-white/90">cookie tecnici</strong> (necessari al funzionamento del sito)
+                        e, previo consenso, <strong class="text-white/90">cookie analitici</strong> per misurare le visite
+                        in forma anonima (Google Analytics con IP anonimizzato).
+                        Non utilizziamo cookie di profilazione o pubblicitari.
+                        <a href="{{ route('cookies') }}" class="text-gold underline hover:text-yellow-300 transition-colors ml-1">Cookie Policy</a>
+                        <span class="text-white/40 mx-1">·</span>
+                        <a href="{{ route('privacy') }}" class="text-gold underline hover:text-yellow-300 transition-colors">Privacy Policy</a>
+                    </p>
+                </div>
+
+                {{-- Bottoni azione — stessa prominenza visiva (Garante IT) --}}
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
+                    <button onclick="arcCookieConsent('necessary')"
+                            class="px-4 py-2.5 text-sm font-semibold text-white/80 border border-white/25 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
+                        Rifiuta
+                    </button>
+                    <button onclick="arcCookieConsent('all')"
+                            class="px-5 py-2.5 text-sm font-bold bg-gold text-navy rounded-lg hover:bg-yellow-400 transition-colors">
+                        Accetta tutti
+                    </button>
+                </div>
+            </div>
+
+            {{-- Barra dettaglio categorie (visibile solo dopo "Gestisci") --}}
+            <div id="cookie-detail" class="hidden mt-4 pt-4 border-t border-white/10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    {{-- Tecnici --}}
+                    <div class="bg-white/5 rounded-xl p-4 flex gap-3 items-start">
+                        <div class="mt-0.5 w-4 h-4 rounded bg-green-500 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-white text-xs font-bold mb-0.5">Cookie tecnici <span class="text-green-400 font-normal ml-1">(sempre attivi)</span></div>
+                            <div class="text-white/55 text-xs leading-relaxed">Sessione, sicurezza CSRF, preferenze lingua. Non richiedono consenso.</div>
+                        </div>
+                    </div>
+                    {{-- Analitici --}}
+                    <div class="bg-white/5 rounded-xl p-4 flex gap-3 items-start">
+                        <div class="mt-0.5 flex-shrink-0">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="analytics-toggle" class="sr-only peer" onchange="arcToggleAnalytics(this.checked)">
+                                <div class="w-9 h-5 bg-white/20 peer-checked:bg-gold rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4"></div>
+                            </label>
+                        </div>
+                        <div>
+                            <div class="text-white text-xs font-bold mb-0.5">Cookie analitici <span class="text-white/50 font-normal ml-1">(Google Analytics 4)</span></div>
+                            <div class="text-white/55 text-xs leading-relaxed">Conteggio visite anonime, pagine popolari. IP anonimizzato. Nessun dato personale.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button onclick="arcSaveCustom()"
+                            class="px-5 py-2 text-sm font-bold bg-gold text-navy rounded-lg hover:bg-yellow-400 transition-colors">
+                        Salva preferenze
+                    </button>
+                </div>
+            </div>
+
+            {{-- Link "Gestisci preferenze" --}}
+            <div class="mt-2">
+                <button onclick="arcToggleDetail()"
+                        id="cookie-manage-btn"
+                        class="text-xs text-white/40 hover:text-white/70 underline transition-colors">
+                    Gestisci preferenze
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Bottone per riaprire le preferenze (sempre visibile in fondo alla pagina) --}}
+    <button id="cookie-reopen-btn"
+            onclick="arcReopenBanner()"
+            style="display:none"
+            title="Gestisci preferenze cookie"
+            aria-label="Gestisci preferenze cookie"
+            class="fixed bottom-4 left-4 z-[9998] w-9 h-9 bg-navy-dark border border-white/20 rounded-full shadow-lg flex items-center justify-center text-base hover:border-gold transition-colors">
+        🍪
+    </button>
+
+    <script>
+    (function () {
+        var KEY   = 'arc_cookie_consent';
+        var DAYS  = 365;
+        var _analyticsChoice = false; // stato toggle nel pannello detail
+
+        /* ── Utility cookie ─────────────────────────────── */
+        function setCookie(name, val, days) {
+            var exp = new Date(Date.now() + days * 864e5).toUTCString();
+            document.cookie = name + '=' + val + ';expires=' + exp + ';path=/;SameSite=Lax';
+        }
+        function getCookie(name) {
+            var m = document.cookie.match('(^| )' + name + '=([^;]+)');
+            return m ? m[2] : null;
+        }
+
+        /* ── Attiva / disattiva Google Analytics ────────── */
+        function enableAnalytics() {
+            if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', {
+                    analytics_storage: 'granted',
+                    ad_storage: 'denied'
+                });
+            }
+        }
+        function disableAnalytics() {
+            if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', {
+                    analytics_storage: 'denied',
+                    ad_storage: 'denied'
+                });
+            }
+        }
+
+        /* ── Nasconde banner + mostra pulsante riapertura ── */
+        function closeBanner() {
+            var b = document.getElementById('cookie-banner');
+            var r = document.getElementById('cookie-reopen-btn');
+            if (b) b.style.display = 'none';
+            if (r) r.style.display = 'flex';
+        }
+
+        /* ── API pubblica ────────────────────────────────── */
+        window.arcCookieConsent = function (type) {
+            setCookie(KEY, type, DAYS);
+            closeBanner();
+            if (type === 'all') {
+                enableAnalytics();
+            } else {
+                disableAnalytics();
+            }
+        };
+
+        window.arcToggleDetail = function () {
+            var d   = document.getElementById('cookie-detail');
+            var btn = document.getElementById('cookie-manage-btn');
+            var tog = document.getElementById('analytics-toggle');
+            var open = d.classList.toggle('hidden');
+            btn.textContent = open ? 'Gestisci preferenze' : 'Nascondi preferenze';
+            // Pre-seleziona toggle in base al consenso attuale
+            if (tog) tog.checked = (getCookie(KEY) === 'all');
+        };
+
+        window.arcToggleAnalytics = function (checked) {
+            _analyticsChoice = checked;
+        };
+
+        window.arcSaveCustom = function () {
+            var type = _analyticsChoice ? 'all' : 'necessary';
+            window.arcCookieConsent(type);
+        };
+
+        window.arcReopenBanner = function () {
+            var b = document.getElementById('cookie-banner');
+            var r = document.getElementById('cookie-reopen-btn');
+            if (b) b.style.display = 'block';
+            if (r) r.style.display = 'none';
+        };
+
+        /* ── Init al caricamento pagina ─────────────────── */
+        var saved = getCookie(KEY);
+        if (!saved) {
+            // Prima visita: mostra banner
+            document.getElementById('cookie-banner').style.display = 'block';
+        } else {
+            // Visita successiva: mostra solo il pulsantino 🍪
+            document.getElementById('cookie-reopen-btn').style.display = 'flex';
+            // Se già aveva accettato tutto, aggiorna GA4 anche ora
+            if (saved === 'all') {
+                // Piccolo delay per attendere il caricamento del tag gtag.js
+                setTimeout(enableAnalytics, 600);
+            }
+        }
+    })();
+    </script>
+    {{-- ══════════════════════════════════════════════════════════════ --}}
 </body>
 </html>

@@ -13,6 +13,8 @@ Allow: /voli
 Allow: /destinazioni
 Allow: /turismo
 Allow: /partner
+Allow: /diventa-partner
+Allow: /media-kit
 Allow: /servizi
 Allow: /aeroporto
 Allow: /contatti

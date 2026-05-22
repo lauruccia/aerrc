@@ -37,6 +37,8 @@
                 ['slug' => 'mare', 'label' => '🏖️ Mare'],
                 ['slug' => 'gastronomia', 'label' => '🍝 Gastronomia'],
                 ['slug' => 'borghi', 'label' => '🏘️ Borghi'],
+                ['slug' => 'cultura', 'label' => '🎨 Cultura'],
+                ['slug' => 'citta', 'label' => '🏙️ Città'],
                 ['slug' => 'eventi', 'label' => '🎭 Eventi'],
             ] as $cat)
                 <a href="{{ route('tourism') }}{{ $cat['slug'] ? '?cat=' . $cat['slug'] : '' }}"
@@ -69,10 +71,14 @@
                               {{ $index === 0 ? 'md:col-span-2' : '' }}">
                         <div class="relative flex items-end p-6 {{ $index === 0 ? 'h-72' : 'h-56' }}"
                              style="background: linear-gradient(135deg, {{ $article->color_from ?? '#0D2B4B' }}, {{ $article->color_to ?? '#1A5276' }})">
+                            @if($article->image_url)
+                            <img src="{{ $article->image_url }}" alt="{{ $article->title }}"
+                                 class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500">
+                            @endif
                             <span class="absolute top-4 left-4 bg-gold text-navy text-xs font-bold px-3 py-1 rounded-full z-10">
                                 {{ $article->category_label }}
                             </span>
-                            <div class="absolute inset-0 bg-gradient-to-t from-navy/85 to-transparent"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
                             <div class="relative z-10">
                                 <h3 class="text-white font-bold text-xl leading-tight">{{ $article->title }}</h3>
                                 <p class="text-white/60 text-xs mt-1">{{ $article->published_at?->format('d M Y') }}</p>

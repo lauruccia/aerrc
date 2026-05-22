@@ -60,6 +60,9 @@ Route::group([], function () {
     Route::get('/cookie-policy', [StaticPageController::class, 'cookies'])->name('cookies');
     Route::get('/termini-e-condizioni', [StaticPageController::class, 'terms'])->name('terms');
     Route::get('/sitemap.xml', [StaticPageController::class, 'sitemap'])->name('sitemap');
+    Route::get('/media-kit', [StaticPageController::class, 'mediaKit'])->name('media-kit');
+    Route::get('/diventa-partner', [StaticPageController::class, 'becomePartner'])->name('become-partner');
+    Route::post('/diventa-partner', [StaticPageController::class, 'becomePartnerSubmit'])->name('become-partner.submit');
 
     // Newsletter
     Route::post('/newsletter', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');

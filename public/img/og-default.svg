@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Background navy -->
+  <rect width="1200" height="630" fill="#0D2347"/>
+  <!-- Decorative blobs -->
+  <ellipse cx="1050" cy="150" rx="420" ry="280" fill="#1A5276" opacity="0.35"/>
+  <ellipse cx="150" cy="520" rx="300" ry="180" fill="#0a3d6b" opacity="0.4"/>
+  <!-- Gold accent line top -->
+  <rect x="0" y="0" width="1200" height="5" fill="#C9A84C"/>
+
+  <!-- LOGO MARK -->
+  <rect x="80" y="200" width="160" height="160" rx="14" fill="#0D2347"/>
+  <rect x="86" y="206" width="148" height="148" rx="10" fill="none" stroke="#C9A84C" stroke-width="3"/>
+  <text text-anchor="middle" x="160" y="304"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="88" font-weight="700"
+        textLength="128" lengthAdjust="spacingAndGlyphs">
+    <tspan fill="#C9A84C">A</tspan><tspan fill="#FFFFFF">RC</tspan>
+  </text>
+
+  <!-- WORDMARK -->
+  <text x="268" y="240" font-family="Georgia, 'Times New Roman', serif"
+        font-size="14" fill="#C9A84C" letter-spacing="6">EST · 2026</text>
+  <text x="268" y="295" font-family="Georgia, 'Times New Roman', serif"
+        font-size="52" font-weight="400" fill="#FFFFFF">Aeroporto</text>
+  <text x="268" y="348" font-family="Georgia, 'Times New Roman', serif"
+        font-size="52" font-weight="400" font-style="italic" fill="#FFFFFF">Reggio Calabria</text>
+  <text x="269" y="375" font-family="Arial, Helvetica, sans-serif"
+        font-size="13" fill="#FFFFFF" opacity="0.5" letter-spacing="6">VOLI · TURISMO · CALABRIA</text>
+
+  <!-- Separator -->
+  <rect x="80" y="420" width="500" height="1" fill="#C9A84C" opacity="0.4"/>
+
+  <!-- Tagline -->
+  <text x="80" y="468" font-family="Georgia, 'Times New Roman', serif"
+        font-size="26" fill="#FFFFFF" opacity="0.85">
+    Il portale ufficioso dei viaggiatori in Calabria
+  </text>
+  <text x="80" y="505" font-family="Arial, Helvetica, sans-serif"
+        font-size="18" fill="#C9A84C" letter-spacing="2">aeroportoreggiocalabria.it</text>
+
+  <!-- Airplane icon (right side) -->
+  <text x="900" y="380" font-family="Arial" font-size="140" fill="#C9A84C" opacity="0.08">✈</text>
+</svg>

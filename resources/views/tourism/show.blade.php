@@ -1,14 +1,68 @@
 @extends('layouts.app')
 
-@section('title', $article->title . ' — Turismo Calabria')
-@section('description', $article->excerpt ?? 'Scopri la Calabria: guida turistica dal portale Aeroporto Reggio Calabria.')
+@section('title', $article->meta_title . ' — Turismo Calabria')
+@section('description', $article->meta_description ?? 'Scopri la Calabria: guida turistica dal portale Aeroporto Reggio Calabria.')
+
+@push('head')
+{{-- Open Graph --}}
+<meta property="og:title" content="{{ $article->meta_title }}">
+<meta property="og:description" content="{{ $article->meta_description ?? '' }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ $article->canonical_url ?: request()->url() }}">
+@if($article->og_image_url)
+<meta property="og:image" content="{{ $article->og_image_url }}">
+@endif
+
+{{-- Twitter Card --}}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $article->meta_title }}">
+<meta name="twitter:description" content="{{ $article->meta_description ?? '' }}">
+@if($article->og_image_url)
+<meta name="twitter:image" content="{{ $article->og_image_url }}">
+@endif
+
+{{-- Canonical --}}
+@if($article->canonical_url)
+<link rel="canonical" href="{{ $article->canonical_url }}">
+@else
+<link rel="canonical" href="{{ request()->url() }}">
+@endif
+
+{{-- Robots --}}
+@if($article->robots !== 'index')
+<meta name="robots" content="{{ str_replace('_', ', ', $article->robots) }}">
+@endif
+
+{{-- Schema.org Article --}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{ addslashes($article->meta_title) }}",
+  "description": "{{ addslashes($article->meta_description ?? '') }}",
+  "datePublished": "{{ $article->published_at?->toISOString() }}",
+  "dateModified": "{{ $article->updated_at->toISOString() }}",
+  "author": { "@type": "Person", "name": "{{ $article->author ?? 'Redazione ARC' }}" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Aeroporto Reggio Calabria",
+    "url": "https://aeroportoreggiocalabria.it"
+  }@if($article->og_image_url),
+  "image": "{{ $article->og_image_url }}"@endif
+}
+</script>
+@endpush
 
 @section('content')
 
 {{-- HERO --}}
 <section class="relative pt-28 pb-20 px-4 overflow-hidden flex items-end min-h-[50vh]"
          style="background: linear-gradient(135deg, {{ $article->color_from ?? '#0D2B4B' }}, {{ $article->color_to ?? '#1A5276' }})">
-    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+    @if($article->image_url)
+    <img src="{{ $article->image_url }}" alt="{{ $article->title }}"
+         class="absolute inset-0 w-full h-full object-cover opacity-50">
+    @endif
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
     <div class="relative z-10 max-w-4xl mx-auto w-full">
         <a href="{{ route('tourism') }}" class="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm mb-6 transition-colors">
             ← Tutti gli articoli
@@ -34,7 +88,7 @@
 
         <div class="bg-white rounded-2xl p-8 md:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.08)] prose prose-lg max-w-none">
             @if($article->body)
-                {!! nl2br(e($article->body)) !!}
+                {!! $article->body !!}
             @else
                 <p class="text-gray-500">Contenuto in fase di redazione. Torna presto per leggere l'articolo completo.</p>
             @endif
