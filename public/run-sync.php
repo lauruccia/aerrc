@@ -2,23 +2,47 @@
 define('SECRET', 'ARC2026sync');
 if (($_GET['token'] ?? '') !== SECRET) { http_response_code(403); die('Accesso negato.'); }
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 header('Content-Type: text/plain; charset=utf-8');
 echo "=== ARC Flight Sync — " . date('d/m/Y H:i:s') . " ===\n\n";
 
-// vendor è un livello sopra, bootstrap è in repo/aerrc
-$autoload  = '/home/aeroportorc/aerrc/vendor/autoload.php';
-$bootstrap = '/home/aeroportorc/aerrc/repo/aerrc/bootstrap/app.php';
+$base    = '/home/aeroportorc/repo/aerrc';
+$envFile = $base . '/.env';
 
-echo "autoload : {$autoload} — " . (file_exists($autoload)  ? 'OK' : 'NON TROVATO') . "\n";
-echo "bootstrap: {$bootstrap} — " . (file_exists($bootstrap) ? 'OK' : 'NON TROVATO') . "\n\n";
+// ── 0. Aggiorna .env con le chiavi mancanti ───────────────────
+$keysToSet = [
+    'AIRLABS_API_KEY'        => 'b2811011-47d4-42c5-ad31-a666136ff464',
+    'FLIGHT_STATUS_CACHE_TTL'=> '7200',
+    'AIRPORT_IATA'           => 'REG',
+];
 
-if (!file_exists($autoload))  die("ERRORE: vendor/autoload.php non trovato.\n");
-if (!file_exists($bootstrap)) die("ERRORE: bootstrap/app.php non trovato.\n");
+echo "0) Aggiorno .env...\n";
+$envContent = file_get_contents($envFile);
+foreach ($keysToSet as $key => $value) {
+    if (preg_match("/^{$key}=/m", $envContent)) {
+        // Aggiorna valore esistente (anche se vuoto)
+        $envContent = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $envContent);
+        echo "   {$key} aggiornato.\n";
+    } else {
+        // Aggiunge in fondo
+        $envContent .= "\n{$key}={$value}";
+        echo "   {$key} aggiunto.\n";
+    }
+}
+file_put_contents($envFile, $envContent);
+echo "   .env salvato.\n\n";
 
-require $autoload;
-$app    = require_once $bootstrap;
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
-$kernel->bootstrap();
+// ── Bootstrap Laravel ─────────────────────────────────────────
+require $base . '/vendor/autoload.php';
+try {
+    $app    = require_once $base . '/bootstrap/app.php';
+    $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+    $kernel->bootstrap();
+} catch (\Throwable $e) {
+    echo "ERRORE bootstrap: " . $e->getMessage() . "\n";
+    exit(1);
+}
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
