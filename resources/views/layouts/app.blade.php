@@ -160,8 +160,8 @@
              1. Vai su https://analytics.google.com
              2. Crea una nuova Property (tipo "Web")
              3. In Admin → Data Streams → Web ottieni il Measurement ID
-                nel formato  G-XXXXXXXXXX
-             4. Sostituisci ENTRAMBE le occorrenze di G-XXXXXXXXXX
+                nel formato  G-CPJHK7S95R
+             4. Sostituisci ENTRAMBE le occorrenze di G-CPJHK7S95R
                 qui sotto con il tuo ID reale
              5. Salva il file — GA4 inizierà a raccogliere dati
          ══════════════════════════════════════════════════════════════ --}}
@@ -187,10 +187,10 @@
         gtag('js', new Date());
     </script>
 
-    {{-- Tag Google Analytics — sostituire G-XXXXXXXXXX con il tuo Measurement ID --}}
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    {{-- Tag Google Analytics — sostituire G-CPJHK7S95R con il tuo Measurement ID --}}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CPJHK7S95R"></script>
     <script>
-        gtag('config', 'G-XXXXXXXXXX', {
+        gtag('config', 'G-CPJHK7S95R', {
             'anonymize_ip': true     // anonimizza IP (best practice GDPR)
         });
     </script>
