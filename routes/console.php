@@ -10,11 +10,14 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 // ── Scheduled tasks ──────────────────────────────────────
-// Svuota cache voli ogni 5 minuti per refresh automatico
-Schedule::call(function () {
-    Cache::forget('flights.departures.REG');
-    Cache::forget('flights.arrivals.REG');
-})->everyFiveMinutes()->name('clear-flights-cache');
+// Svuota cache stato live voli ogni 60 minuti.
+// Le chiavi DEVONO corrispondere a quelle usate in FlightStatusService:
+//   "flight_status.departure.{iata}" e "flight_status.arrival.{iata}"
+$iata = env('AIRPORT_IATA', 'REG');
+Schedule::call(function () use ($iata) {
+    Cache::forget("flight_status.departure.{$iata}");
+    Cache::forget("flight_status.arrival.{$iata}");
+})->hourly()->name('clear-flights-status-cache');
 
 // Svuota cache meteo ogni 30 minuti
 Schedule::call(function () {
@@ -23,8 +26,8 @@ Schedule::call(function () {
 
 // ── Sincronizzazione voli reali da AirLabs ────────────────────
 // Ogni giorno alle 04:30 importa i voli del giorno nel DB.
-// La cache dei voli viene poi svuotata ogni 5 minuti (vedi sopra),
-// quindi il tabellone mostrerà i nuovi dati entro pochi minuti.
+// Lo stato live (ritardi, gate, ecc.) viene aggiornato dalla cache
+// di FlightStatusService che si rinnova ogni ora (vedi sopra).
 Schedule::command('flights:sync')
     ->dailyAt('04:30')
     ->name('flights-sync-airlabs')
