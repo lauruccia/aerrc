@@ -3,33 +3,25 @@
  * Script temporaneo — esegui UNA VOLTA dal browser poi elimina questo file.
  * URL: https://aeroportoreggiocalabria.it/run-sync.php?token=ARC2026sync
  * ELIMINA QUESTO FILE dopo l'uso!
- *
- * Su cPanel: public_html/ → app in /home/aeroportorc/aerrc/
  */
 define('SECRET', 'ARC2026sync');
 if (($_GET['token'] ?? '') !== SECRET) { http_response_code(403); die('Accesso negato.'); }
 
 header('Content-Type: text/plain; charset=utf-8');
-
 echo "=== ARC Flight Sync — " . date('d/m/Y H:i:s') . " ===\n\n";
 
-// Percorso reale dell'app Laravel su cPanel
-// public_html/ è separata da aerrc/ — non si può usare __DIR__/../
-$appBase = '/home/aeroportorc/aerrc';
+// Laravel è in /home/aeroportorc/aerrc/repo/aerrc/
+$laravelBase = '/home/aeroportorc/aerrc/repo/aerrc';
 
-echo "Base path: {$appBase}\n";
+$autoload  = $laravelBase . '/vendor/autoload.php';
+$bootstrap = $laravelBase . '/bootstrap/app.php';
 
-$autoload = $appBase . '/vendor/autoload.php';
-$bootstrap = $appBase . '/bootstrap/app.php';
+echo "Laravel base: {$laravelBase}\n";
 
-if (!file_exists($autoload)) {
-    die("ERRORE: vendor/autoload.php non trovato in {$appBase}\nVerifica il percorso.\n");
-}
-if (!file_exists($bootstrap)) {
-    die("ERRORE: bootstrap/app.php non trovato in {$appBase}\n");
-}
+if (!file_exists($autoload))  die("ERRORE: vendor/autoload.php non trovato in {$laravelBase}\n");
+if (!file_exists($bootstrap)) die("ERRORE: bootstrap/app.php non trovato in {$laravelBase}\n");
 
-echo "Autoload trovato. Bootstrap trovato.\n\n";
+echo "Autoload OK. Bootstrap OK.\n\n";
 
 // Bootstrap Laravel
 require $autoload;
@@ -48,8 +40,8 @@ echo "   OK.\n\n";
 // 2. Ricarica config
 echo "2) Ricarico la configurazione...\n";
 Artisan::call('config:clear');
-echo "   " . trim(Artisan::output()) ?: "OK.";
-echo "\n\n";
+$out = trim(Artisan::output());
+echo "   " . ($out ?: 'OK.') . "\n\n";
 
 // 3. Sync voli
 echo "3) Sincronizzo i voli da AirLabs...\n";
