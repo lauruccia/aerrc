@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Destination;
+use App\Models\TourismArticle;
 
 class StaticPageController extends Controller
 {
@@ -142,7 +144,10 @@ class StaticPageController extends Controller
 
     public function sitemap(): Response
     {
-        $xml = view('sitemap')->render();
+        $destinations    = Destination::select('slug', 'updated_at')->get();
+        $tourismArticles = TourismArticle::select('slug', 'updated_at')->get();
+
+        $xml = view('sitemap', compact('destinations', 'tourismArticles'))->render();
         return response($xml, 200)->header('Content-Type', 'application/xml');
     }
 }
