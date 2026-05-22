@@ -156,7 +156,83 @@ class StaticPageController extends Controller
             $tourismArticles = collect();
         }
 
-        $xml = view('sitemap', compact('destinations', 'tourismArticles'))->render();
+        $urls = [];
+
+        // Homepage
+        $urls[] = ['loc' => url('/'), 'changefreq' => 'daily', 'priority' => '1.0'];
+
+        // Sezioni principali
+        if (\Illuminate\Support\Facades\Route::has('flights.index')) {
+            $urls[] = ['loc' => route('flights.index'), 'changefreq' => 'hourly', 'priority' => '0.9'];
+        }
+        if (\Illuminate\Support\Facades\Route::has('destinations.index')) {
+            $urls[] = ['loc' => route('destinations.index'), 'changefreq' => 'weekly', 'priority' => '0.85'];
+        }
+        if (\Illuminate\Support\Facades\Route::has('tourism.index')) {
+            $urls[] = ['loc' => route('tourism.index'), 'changefreq' => 'weekly', 'priority' => '0.85'];
+        } elseif (\Illuminate\Support\Facades\Route::has('tourism')) {
+            $urls[] = ['loc' => route('tourism'), 'changefreq' => 'weekly', 'priority' => '0.85'];
+        }
+
+        // Destinazioni dinamiche
+        foreach ($destinations as $dest) {
+            if (\Illuminate\Support\Facades\Route::has('destinations.show')) {
+                $urls[] = [
+                    'loc'        => route('destinations.show', $dest->slug),
+                    'lastmod'    => optional($dest->updated_at)->toAtomString() ?? now()->subDays(7)->toAtomString(),
+                    'changefreq' => 'weekly',
+                    'priority'   => '0.75',
+                ];
+            }
+        }
+
+        // Articoli turismo dinamici
+        foreach ($tourismArticles as $article) {
+            if (\Illuminate\Support\Facades\Route::has('tourism.show')) {
+                $urls[] = [
+                    'loc'        => route('tourism.show', $article->slug),
+                    'lastmod'    => optional($article->updated_at)->toAtomString() ?? now()->subDays(7)->toAtomString(),
+                    'changefreq' => 'weekly',
+                    'priority'   => '0.7',
+                ];
+            }
+        }
+
+        // Pagine statiche
+        $staticPages = [
+            ['route' => 'services',     'priority' => '0.7',  'changefreq' => 'monthly'],
+            ['route' => 'airport-info', 'priority' => '0.7',  'changefreq' => 'monthly'],
+            ['route' => 'partners',     'priority' => '0.65', 'changefreq' => 'monthly'],
+            ['route' => 'contact',      'priority' => '0.5',  'changefreq' => 'monthly'],
+            ['route' => 'privacy',      'priority' => '0.2',  'changefreq' => 'yearly'],
+            ['route' => 'cookies',      'priority' => '0.2',  'changefreq' => 'yearly'],
+            ['route' => 'terms',        'priority' => '0.2',  'changefreq' => 'yearly'],
+        ];
+        foreach ($staticPages as $page) {
+            if (\Illuminate\Support\Facades\Route::has($page['route'])) {
+                $urls[] = [
+                    'loc'        => route($page['route']),
+                    'changefreq' => $page['changefreq'],
+                    'priority'   => $page['priority'],
+                ];
+            }
+        }
+
+        // Costruisce XML senza passare per Blade (evita bug <?xml con PHP)
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+        foreach ($urls as $url) {
+            $xml .= "  <url>\n";
+            $xml .= "    <loc>" . htmlspecialchars($url['loc']) . "</loc>\n";
+            if (!empty($url['lastmod'])) {
+                $xml .= "    <lastmod>" . $url['lastmod'] . "</lastmod>\n";
+            }
+            $xml .= "    <changefreq>" . $url['changefreq'] . "</changefreq>\n";
+            $xml .= "    <priority>" . $url['priority'] . "</priority>\n";
+            $xml .= "  </url>\n";
+        }
+        $xml .= '</urlset>';
+
         return response($xml, 200)->header('Content-Type', 'application/xml');
     }
 }
