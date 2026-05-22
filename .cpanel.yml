@@ -1,42 +1,16 @@
 ---
 deployment:
   tasks:
-    # ── 1. Copia app fuori da public_html ─────────────────────────────────────
     - /bin/mkdir -p /home/aeroportorc/aerrc
     - /bin/cp -Rf $CPANEL_BASE_INSTALL_DIR/. /home/aeroportorc/aerrc/
-
-    # ── 2. Copia public/ dentro public_html/ ──────────────────────────────────
     - /bin/cp -Rf $CPANEL_BASE_INSTALL_DIR/public/. /home/aeroportorc/public_html/
-
-    # ── 3. index.php con percorsi assoluti ────────────────────────────────────
-    - /bin/cat > /home/aeroportorc/public_html/index.php <<'PHPEOF'
-<?php
-define('LARAVEL_START', microtime(true));
-if (file_exists($maintenance = __DIR__.'/../aerrc/storage/framework/maintenance.php')) {
-    require $maintenance;
-}
-require __DIR__.'/../aerrc/vendor/autoload.php';
-$app = require_once __DIR__.'/../aerrc/bootstrap/app.php';
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
-$response = $kernel->handle($request = Illuminate\Http\Request::capture())->send();
-$kernel->terminate($request, $response);
-PHPEOF
-
-    # ── 4. Dipendenze PHP ──────────────────────────────────────────────────────
-    - /usr/local/bin/composer install --working-dir=/home/aeroportorc/aerrc --no-dev --optimize-autoloader --no-interaction --quiet
-
-    # ── 5. Permessi storage e cache ────────────────────────────────────────────
+    - /bin/cp /home/aeroportorc/aerrc/public/index.cpanel.php /home/aeroportorc/public_html/index.php
     - /bin/chmod -R 775 /home/aeroportorc/aerrc/storage
     - /bin/chmod -R 775 /home/aeroportorc/aerrc/bootstrap/cache
-
-    # ── 6. Migrazioni database ─────────────────────────────────────────────────
+    - /usr/local/bin/composer install --working-dir=/home/aeroportorc/aerrc --no-dev --optimize-autoloader --no-interaction --quiet
     - /usr/local/bin/php /home/aeroportorc/aerrc/artisan migrate --force --no-interaction
-
-    # ── 7. Cache Laravel ──────────────────────────────────────────────────────
     - /usr/local/bin/php /home/aeroportorc/aerrc/artisan config:cache
     - /usr/local/bin/php /home/aeroportorc/aerrc/artisan route:cache
     - /usr/local/bin/php /home/aeroportorc/aerrc/artisan view:cache
     - /usr/local/bin/php /home/aeroportorc/aerrc/artisan optimize
-
-    # ── 8. Symlink storage pubblico ───────────────────────────────────────────
     - /bin/ln -sfn /home/aeroportorc/aerrc/storage/app/public /home/aeroportorc/public_html/storage
