@@ -72,8 +72,8 @@
                         <div class="relative flex items-end p-6 {{ $index === 0 ? 'h-72' : 'h-56' }}"
                              style="background: linear-gradient(135deg, {{ $article->color_from ?? '#0D2B4B' }}, {{ $article->color_to ?? '#1A5276' }})">
                             @if($article->image_url)
-                            <img src="{{ $article->image_url }}" alt="{{ $article->title }}"
-                                 class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500">
+                            <x-responsive-photo :url="$article->image_url" :alt="$article->title"
+                                 class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500" loading="lazy" />
                             @endif
                             <span class="absolute top-4 left-4 bg-gold text-navy text-xs font-bold px-3 py-1 rounded-full z-10">
                                 {{ $article->category_label }}

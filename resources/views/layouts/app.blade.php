@@ -135,9 +135,16 @@
 
     {{-- Favicon & Brand Icons --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/favicon.svg') }}">
-    <link rel="apple-touch-icon" href="{{ asset('img/logo-mark.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192.png') }}">
     <meta name="theme-color" content="#0D2347">
     <meta name="msapplication-TileColor" content="#0D2347">
+
+    {{-- PWA — manifest + meta iOS/Android --}}
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ARC">
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -353,6 +360,17 @@
     @livewireScripts
 
     @stack('scripts')
+
+    {{-- Registrazione Service Worker (PWA) --}}
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js').catch(function (err) {
+                    console.warn('Service worker registration failed:', err);
+                });
+            });
+        }
+    </script>
 
     {{-- ══════════════════════════════════════════════════════════════
          COOKIE CONSENT BANNER

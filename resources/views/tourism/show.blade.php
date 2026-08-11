@@ -59,8 +59,8 @@
 <section class="relative pt-28 pb-20 px-4 overflow-hidden flex items-end min-h-[50vh]"
          style="background: linear-gradient(135deg, {{ $article->color_from ?? '#0D2B4B' }}, {{ $article->color_to ?? '#1A5276' }})">
     @if($article->image_url)
-    <img src="{{ $article->image_url }}" alt="{{ $article->title }}"
-         class="absolute inset-0 w-full h-full object-cover opacity-50">
+    <x-responsive-photo :url="$article->image_url" :alt="$article->title"
+         class="absolute inset-0 w-full h-full object-cover opacity-50" loading="eager" />
     @endif
     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
     <div class="relative z-10 max-w-4xl mx-auto w-full">

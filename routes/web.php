@@ -126,3 +126,53 @@ Route::get('/admin/reseed-flights', function () {
         ], 500);
     }
 })->name('admin.reseed-flights');
+
+/*
+|--------------------------------------------------------------------------
+| Rotta admin: riseed articoli turismo (senza terminale)
+|
+| Protetta dallo stesso ADMIN_RESEED_TOKEN usato per reseed-flights.
+| Uso: https://aeroportoreggiocalabria.it/admin/reseed-tourism?token=<valore>
+|
+| Il seeder usa updateOrCreate su title_it, quindi è sicuro rilanciarlo:
+| aggiorna gli articoli esistenti (es. per applicare loading="lazy" alle
+| immagini nel body) senza duplicarli.
+|--------------------------------------------------------------------------
+*/
+Route::get('/admin/reseed-tourism', function () {
+    $token = config('app.admin_reseed_token');
+
+    if (empty($token)) {
+        abort(403, 'ADMIN_RESEED_TOKEN non configurato in .env. Aggiungi la variabile e riprova.');
+    }
+
+    if (request('token') !== $token) {
+        abort(403, 'Token non valido.');
+    }
+
+    try {
+        $seeder = new \Database\Seeders\TourismArticleSeeder();
+        $seeder->setContainer(app());
+        $seeder->setCommand(new class extends \Symfony\Component\Console\Command\Command {
+            public array $log = [];
+            public function info(string $s): void { $this->log[] = $s; }
+            public function line(string $s): void { $this->log[] = $s; }
+        });
+        $seeder->run();
+
+        $count = \App\Models\TourismArticle::count();
+
+        return response()->json([
+            'status'  => 'ok',
+            'records' => $count,
+            'time'    => now()->toISOString(),
+            'message' => "✅ Seeder eseguito. {$count} articoli presenti nel database.",
+        ]);
+
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+})->name('admin.reseed-tourism');
