@@ -20,6 +20,10 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'it_IT'),
 
+    // Token segreto per la rotta /admin/reseed-flights (senza terminale)
+    // Impostare ADMIN_RESEED_TOKEN nel .env del server di produzione.
+    'admin_reseed_token' => env('ADMIN_RESEED_TOKEN', ''),
+
     'cipher' => 'AES-256-CBC',
 
     'key' => env('APP_KEY'),

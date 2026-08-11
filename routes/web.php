@@ -78,3 +78,51 @@ Route::prefix('api/v1')->name('api.')->middleware('throttle:60,1')->group(functi
     Route::get('/flights/arrivals',   [\App\Http\Controllers\Api\FlightApiController::class, 'arrivals'])->name('flights.arrivals');
     Route::get('/weather',            [\App\Http\Controllers\Api\WeatherApiController::class, 'current'])->name('weather');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Rotta admin: riseed voli (senza terminale)
+|
+| Protetta da ADMIN_RESEED_TOKEN nel file .env del server.
+| Uso: https://aeroportoreggiocalabria.it/admin/reseed-flights?token=<valore>
+|
+| Per impostare il token: aggiungi in .env sul server →
+|   ADMIN_RESEED_TOKEN=una_parola_segreta_lunga
+|--------------------------------------------------------------------------
+*/
+Route::get('/admin/reseed-flights', function () {
+    $token = config('app.admin_reseed_token');
+
+    // Se il token non è configurato in .env, blocca per sicurezza
+    if (empty($token)) {
+        abort(403, 'ADMIN_RESEED_TOKEN non configurato in .env. Aggiungi la variabile e riprova.');
+    }
+
+    // Verifica il token passato via query string
+    if (request('token') !== $token) {
+        abort(403, 'Token non valido.');
+    }
+
+    // Esegui il seeder
+    try {
+        $seeder = new \Database\Seeders\FlightScheduleSeeder();
+        $seeder->setContainer(app());
+        // Nota: NON chiamiamo setCommand — il seeder gestisce il caso null
+        $seeder->run();
+
+        $count = \App\Models\FlightSchedule::count();
+
+        return response()->json([
+            'status'  => 'ok',
+            'records' => $count,
+            'time'    => now()->toISOString(),
+            'message' => "✅ Seeder eseguito. {$count} record presenti nel database.",
+        ]);
+
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+})->name('admin.reseed-flights');
