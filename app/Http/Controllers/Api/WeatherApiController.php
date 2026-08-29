@@ -91,6 +91,6 @@ class WeatherApiController extends Controller
             $code <= 82 => 'Rovesci',
             $code <= 99 => 'Temporale',
             default     => 'Variabile',
-        ];
+        };
     }
 }
