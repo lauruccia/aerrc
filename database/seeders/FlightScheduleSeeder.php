@@ -260,8 +260,6 @@ class FlightScheduleSeeder extends Seeder
 
     public function run(): void
     {
-        FlightSchedule::query()->delete();
-
         // Calcola stagioni: 2 passate + corrente + 2 future
         $seasons = $this->computeSeasons(Carbon::now(), past: 2, future: 2);
 
@@ -289,7 +287,9 @@ class FlightScheduleSeeder extends Seeder
                     'airport_iata'   => $route['airport_iata'],
                     'airport_name'   => $route['airport_name'],
                     'scheduled_time' => $route['scheduled_time'],
-                    'days_of_week'   => json_encode($days),
+                    // Eloquent applica il cast array del model; passare JSON qui
+                    // produrrebbe una stringa doppiamente codificata.
+                    'days_of_week'   => $days,
                     'valid_from'     => $season['from'],
                     'valid_to'       => $season['to'],
                     'terminal'       => $route['terminal'],
@@ -300,9 +300,19 @@ class FlightScheduleSeeder extends Seeder
             }
         }
 
-        // Insert a blocchi da 100
-        foreach (array_chunk($records, 100) as $chunk) {
-            FlightSchedule::insert($chunk);
+        // Update non distruttivo: ripristina/aggiorna il calendario stagionale
+        // senza rimuovere import giornalieri o voli inseriti dal backoffice.
+        // updateOrCreate non richiede un indice UNIQUE già presente in produzione.
+        foreach ($records as $record) {
+            FlightSchedule::updateOrCreate(
+                [
+                    'flight_number' => $record['flight_number'],
+                    'type'          => $record['type'],
+                    'valid_from'    => $record['valid_from'],
+                    'valid_to'      => $record['valid_to'],
+                ],
+                $record
+            );
         }
 
         $count = FlightSchedule::count();

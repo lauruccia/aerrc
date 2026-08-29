@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Sincronizza i voli di oggi dall'API AirLabs nel database locale.
@@ -127,6 +128,17 @@ class SyncFlightsFromAirlabs extends Command
 
         $this->info("   Voli da importare: " . count($toInsert));
 
+        // Una risposta HTTP valida ma vuota non deve mai cancellare il
+        // calendario locale. Può capitare per limiti/quota del provider o
+        // durante il cambio data nel suo fuso orario.
+        if (empty($toInsert)) {
+            $this->error('AirLabs non ha restituito voli: calendario esistente mantenuto.');
+            Log::warning('flights:sync — risposta vuota, database non modificato', [
+                'date' => $today->toDateString(),
+            ]);
+            return Command::FAILURE;
+        }
+
         if ($isDryRun) {
             $this->table(
                 ['Num.', 'Tipo', 'Aeroporto', 'Orario', 'Airline', 'Stato'],
@@ -142,16 +154,15 @@ class SyncFlightsFromAirlabs extends Command
             return Command::SUCCESS;
         }
 
-        // ── 3. Svuota la tabella e ricomincia da zero ──────────────
-        // Rimuoviamo tutti i record (seeder stagionali inclusi) per evitare
-        // che vecchie righe con valid_to lontano si mescolino ai dati live.
-        $deleted = FlightSchedule::count();
-        FlightSchedule::truncate();
+        // ── 3. Sostituisce soltanto l'import giornaliero ──────────
+        // Il calendario stagionale resta sempre disponibile come fallback,
+        // anche dopo mezzanotte o quando il provider non è raggiungibile.
+        DB::transaction(function () use ($today, $toInsert) {
+            FlightSchedule::query()
+                ->whereDate('valid_from', $today->toDateString())
+                ->whereDate('valid_to', $today->toDateString())
+                ->delete();
 
-        $this->line("   Record precedenti rimossi: {$deleted}");
-
-        // ── 4. Inserisce i nuovi record ───────────────────────────
-        if (! empty($toInsert)) {
             $now = now();
             $rows = array_map(fn($f) => array_merge($f, [
                 'created_at' => $now,
@@ -159,7 +170,7 @@ class SyncFlightsFromAirlabs extends Command
             ]), $toInsert);
 
             FlightSchedule::insert($rows);
-        }
+        });
 
         $this->info("   ✅ Sincronizzazione completata: " . count($toInsert) . " voli inseriti.");
         Log::info('flights:sync completato', ['date' => $today->toDateString(), 'count' => count($toInsert)]);

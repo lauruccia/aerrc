@@ -25,11 +25,12 @@ Schedule::call(function () {
 })->everyThirtyMinutes()->name('clear-weather-cache');
 
 // ── Sincronizzazione voli reali da AirLabs ────────────────────
-// Ogni giorno alle 04:30 importa i voli del giorno nel DB.
+// Subito dopo mezzanotte importa i voli del giorno nel DB. Il calendario
+// stagionale rimane comunque disponibile durante errori o ritardi del provider.
 // Lo stato live (ritardi, gate, ecc.) viene aggiornato dalla cache
 // di FlightStatusService che si rinnova ogni ora (vedi sopra).
 Schedule::command('flights:sync')
-    ->dailyAt('04:30')
+    ->dailyAt('00:10')
     ->name('flights-sync-airlabs')
     ->withoutOverlapping()
     ->runInBackground();

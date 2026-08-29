@@ -10,6 +10,7 @@ deployment:
     - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan config:clear
     - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan route:clear
     - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan view:clear
+    - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan db:seed --class=Database\\Seeders\\FlightScheduleSeeder --force
     - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan config:cache
     - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan route:cache
     - /opt/cpanel/ea-php83/root/usr/bin/php /home/aeroportorc/aerrc/artisan view:cache
