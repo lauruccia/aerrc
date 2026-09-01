@@ -21,9 +21,11 @@
 
         <div class="ml-auto flex items-center gap-4">
             {{-- Indicatore LIVE / PAUSED --}}
-            <span class="flex items-center gap-2 text-xs {{ $autoRefresh ? 'text-green-400' : 'text-white/40' }}">
-                <span class="w-2 h-2 rounded-full {{ $autoRefresh ? 'bg-green-400 animate-pulse' : 'bg-white/30' }}"></span>
-                @if($autoRefresh)
+            <span class="flex items-center gap-2 text-xs {{ $liveAvailable && $autoRefresh ? 'text-green-400' : ($liveAvailable ? 'text-white/40' : 'text-red-300') }}">
+                <span class="w-2 h-2 rounded-full {{ $liveAvailable && $autoRefresh ? 'bg-green-400 animate-pulse' : ($liveAvailable ? 'bg-white/30' : 'bg-red-400') }}"></span>
+                @if(!$liveAvailable)
+                    DATI LIVE NON DISPONIBILI
+                @elseif($autoRefresh)
                     LIVE · {{ __('flights.last_update', ['time' => $lastUpdate]) }}
                 @else
                     PAUSA · {{ __('flights.last_update', ['time' => $lastUpdate]) }}
@@ -50,7 +52,7 @@
             {{-- Refresh manuale --}}
             <button wire:click="refresh"
                     wire:loading.attr="disabled"
-                    title="Aggiorna ora"
+                    title="Ricarica il tabellone"
                     class="text-white/60 hover:text-gold transition-colors text-xs flex items-center gap-1">
                 <svg wire:loading.class="animate-spin" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

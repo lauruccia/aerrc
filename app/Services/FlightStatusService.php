@@ -30,7 +30,7 @@ class FlightStatusService
 
     public function __construct()
     {
-        $this->cacheTtl     = (int) env('FLIGHT_STATUS_CACHE_TTL', 3600);
+        $this->cacheTtl     = max(60, (int) env('FLIGHT_STATUS_CACHE_TTL', 7200));
         $this->airportIata  = env('AIRPORT_IATA', 'REG');
 
         $this->airlabsKey   = env('AIRLABS_API_KEY');
@@ -66,6 +66,55 @@ class FlightStatusService
             $this->cacheTtl,
             fn() => $this->fetchStatusMap('arrival')
         );
+    }
+
+    public function getDepartureFeed(): array
+    {
+        return $this->getLiveFeed('departure')['flights'];
+    }
+
+    public function getArrivalFeed(): array
+    {
+        return $this->getLiveFeed('arrival')['flights'];
+    }
+
+    public function isFeedAvailable(string $type): bool
+    {
+        return $this->getLiveFeed($type)['available'];
+    }
+
+    public function getFeedUpdatedAt(string $type): string
+    {
+        return $this->getLiveFeed($type)['fetched_at'] ?? now()->format('H:i');
+    }
+
+    protected function getLiveFeed(string $type): array
+    {
+        return Cache::remember(
+            "flight_feed.v2.{$type}.{$this->airportIata}",
+            $this->cacheTtl,
+            fn () => $this->fetchLiveFeed($type)
+        );
+    }
+
+    protected function fetchLiveFeed(string $type): array
+    {
+        if ($this->airlabsKey) {
+            $flights = $this->fetchFlightsFromAirLabs($type);
+            if ($flights !== null) {
+                return ['available' => true, 'fetched_at' => now()->format('H:i'), 'flights' => $flights];
+            }
+        }
+
+        if ($this->aviationKey) {
+            $flights = $this->fetchFlightsFromAviationStack($type);
+            if ($flights !== null) {
+                return ['available' => true, 'fetched_at' => now()->format('H:i'), 'flights' => $flights];
+            }
+        }
+
+        Log::warning('Feed voli live non disponibile', ['type' => $type]);
+        return ['available' => false, 'fetched_at' => now()->format('H:i'), 'flights' => []];
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -212,6 +261,133 @@ class FlightStatusService
         }
     }
 
+    protected function fetchFlightsFromAirLabs(string $type): ?array
+    {
+        try {
+            $paramKey = $type === 'departure' ? 'dep_iata' : 'arr_iata';
+            $response = Http::timeout(8)->get("{$this->airlabsUrl}/schedules", [
+                'api_key' => $this->airlabsKey,
+                $paramKey => $this->airportIata,
+            ]);
+
+            if ($response->failed() || ! is_array($response->json('response'))) return null;
+
+            $result = [];
+            foreach ($response->json('response') as $flight) {
+                $number = strtoupper(trim($flight['flight_iata'] ?? ''));
+                if ($number === '') continue;
+                $result[$number] = $this->normalizeAirLabsFlight($flight, $type);
+            }
+
+            return $this->sortFlights(array_values($result));
+        } catch (\Throwable $e) {
+            Log::error('AirLabs feed: eccezione', ['error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    protected function normalizeAirLabsFlight(array $flight, string $type): array
+    {
+        $status = $this->normalizeStatus($flight['status'] ?? 'scheduled');
+        $delay = (int) ($flight['delayed'] ?? 0);
+        $remote = $type === 'departure' ? 'arr' : 'dep';
+        $scheduled = $type === 'departure' ? ($flight['dep_time'] ?? null) : ($flight['arr_time'] ?? null);
+        $actual = $type === 'departure' ? ($flight['dep_actual_utc'] ?? null) : ($flight['arr_actual_utc'] ?? null);
+        $estimated = $type === 'departure' ? ($flight['dep_estimated_utc'] ?? null) : ($flight['arr_estimated_utc'] ?? null);
+
+        return [
+            'flight_number' => $this->formatFlightNumber($flight['flight_iata'] ?? ''),
+            'airline_name' => $flight['airline_name'] ?? $flight['airline_iata'] ?? 'Compagnia aerea',
+            'airline_iata' => $flight['airline_iata'] ?? null,
+            'airport_name' => $flight["{$remote}_name"] ?? $flight["{$remote}_iata"] ?? '-',
+            'airport_iata' => $flight["{$remote}_iata"] ?? '-',
+            'scheduled_time' => $this->parseLocalTime($scheduled) ?? '--:--',
+            'terminal' => $flight['dep_terminal'] ?? $flight['arr_terminal'] ?? null,
+            'gate' => $flight['dep_gate'] ?? $flight['arr_gate'] ?? null,
+            'status' => $status,
+            'delay_minutes' => $delay,
+            'actual_time' => $this->parseUtcTime($actual),
+            'estimated_time' => $this->parseUtcTime($estimated),
+            'status_badge' => $this->statusBadge($status, $delay),
+            'live_status' => true,
+        ];
+    }
+
+    protected function fetchFlightsFromAviationStack(string $type): ?array
+    {
+        try {
+            $paramKey = $type === 'departure' ? 'dep_iata' : 'arr_iata';
+            $response = Http::timeout(8)->get("{$this->aviationUrl}/flights", [
+                'access_key' => $this->aviationKey,
+                $paramKey => $this->airportIata,
+                'limit' => 100,
+            ]);
+            if ($response->failed() || ! is_array($response->json('data'))) return null;
+
+            $result = [];
+            foreach ($response->json('data') as $flight) {
+                $number = strtoupper(trim($flight['flight']['iata'] ?? ''));
+                if ($number === '') continue;
+                $port = $type === 'departure' ? ($flight['departure'] ?? []) : ($flight['arrival'] ?? []);
+                $remote = $type === 'departure' ? ($flight['arrival'] ?? []) : ($flight['departure'] ?? []);
+                $status = $this->normalizeStatus($flight['flight_status'] ?? 'scheduled');
+                $delay = (int) ($port['delay'] ?? 0);
+                $result[$number] = [
+                    'flight_number' => $this->formatFlightNumber($number),
+                    'airline_name' => $flight['airline']['name'] ?? $flight['airline']['iata'] ?? 'Compagnia aerea',
+                    'airline_iata' => $flight['airline']['iata'] ?? null,
+                    'airport_name' => $remote['airport'] ?? $remote['iata'] ?? '-',
+                    'airport_iata' => $remote['iata'] ?? '-',
+                    'scheduled_time' => $this->parseLocalTime($port['scheduled'] ?? null) ?? '--:--',
+                    'terminal' => $port['terminal'] ?? null,
+                    'gate' => $port['gate'] ?? null,
+                    'status' => $status,
+                    'delay_minutes' => $delay,
+                    'actual_time' => $this->parseLocalTime($port['actual'] ?? null),
+                    'estimated_time' => $this->parseLocalTime($port['estimated'] ?? null),
+                    'status_badge' => $this->statusBadge($status, $delay),
+                    'live_status' => true,
+                ];
+            }
+            return $this->sortFlights(array_values($result));
+        } catch (\Throwable $e) {
+            Log::error('AviationStack feed: eccezione', ['error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    protected function sortFlights(array $flights): array
+    {
+        usort($flights, fn (array $a, array $b) => strcmp($a['scheduled_time'], $b['scheduled_time']));
+        return $flights;
+    }
+
+    protected function normalizeStatus(string $status): string
+    {
+        return match (strtolower($status)) {
+            'active' => 'active',
+            'landed' => 'landed',
+            'cancelled' => 'cancelled',
+            'diverted' => 'diverted',
+            default => 'scheduled',
+        };
+    }
+
+    protected function parseLocalTime(?string $value): ?string
+    {
+        if (! $value) return null;
+        try {
+            return \Carbon\Carbon::parse($value, 'Europe/Rome')->setTimezone('Europe/Rome')->format('H:i');
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    protected function formatFlightNumber(string $raw): string
+    {
+        return preg_replace('/^([A-Z]{2,3})(\d+)$/', '$1 $2', strtoupper(trim($raw))) ?: $raw;
+    }
+
     // ─────────────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────────────
@@ -220,7 +396,7 @@ class FlightStatusService
     {
         if (! $utc) return null;
         try {
-            return \Carbon\Carbon::parse($utc)->setTimezone('Europe/Rome')->format('H:i');
+            return \Carbon\Carbon::parse($utc, 'UTC')->setTimezone('Europe/Rome')->format('H:i');
         } catch (\Throwable) {
             return null;
         }

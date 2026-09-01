@@ -76,7 +76,7 @@
      ════════════════════════════════════════════════════════ --}}
 <section id="voli" class="bg-navy py-20 px-4">
     <div class="max-w-7xl mx-auto">
-        <span class="section-tag-dark">LIVE ● {{ __('flights.updated_now') }}</span>
+        <span class="section-tag-dark">DATI DA PROVIDER AERONAUTICO</span>
         <h2 class="text-4xl font-black text-white mb-2">{{ __('flights.section_title') }}</h2>
         <p class="text-white/70 text-lg mb-8 max-w-xl">{{ __('flights.section_subtitle') }}</p>
 

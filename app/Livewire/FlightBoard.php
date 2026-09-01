@@ -11,6 +11,7 @@ class FlightBoard extends Component
     public string $tab        = 'departures';
     public string $lastUpdate = '';
     public bool   $autoRefresh = true;
+    public bool   $liveAvailable = false;
 
     // Polling automatico ogni 60 secondi (Livewire 3)
     protected int $pollInterval = 60000; // ms
@@ -25,20 +26,12 @@ class FlightBoard extends Component
         if (! in_array($tab, ['departures', 'arrivals'])) return;
 
         $this->tab = $tab;
-        $this->lastUpdate = now()->format('H:i');
     }
 
-    /**
-     * Refresh manuale: svuota la cache e rilascia una nuova fetch.
-     */
+    /** Aggiorna la vista usando il feed in cache, senza consumare quota extra. */
     public function refresh(): void
     {
-        // Svuota sia la cache degli orari DB (non necessaria, sono statici)
-        // sia la cache dello stato live API
-        $iata = config('aviationstack.airport_iata', 'REG');
-        cache()->forget("flight_status.departure.{$iata}");
-        cache()->forget("flight_status.arrival.{$iata}");
-        $this->lastUpdate = now()->format('H:i');
+        // Il render rilegge il feed; la cache impedisce chiamate API aggiuntive.
     }
 
     /**
@@ -47,7 +40,6 @@ class FlightBoard extends Component
     public function poll(): void
     {
         if ($this->autoRefresh) {
-            $this->lastUpdate = now()->format('H:i');
             // Il render rilancia HybridFlightService che usa la cache interna
         }
     }
@@ -63,11 +55,15 @@ class FlightBoard extends Component
             'arrivals' => $service->getArrivals(),
             default    => $service->getDepartures(),
         };
+        $feedType = $this->tab === 'arrivals' ? 'arrival' : 'departure';
+        $this->liveAvailable = $service->isLiveAvailable($feedType);
+        $this->lastUpdate = $service->getLiveUpdatedAt($feedType);
 
         return view('livewire.flight-board', [
             'flights'      => $flights,
             'lastUpdate'   => $this->lastUpdate,
             'autoRefresh'  => $this->autoRefresh,
+            'liveAvailable' => $this->liveAvailable,
             'pollInterval' => $this->pollInterval,
         ]);
     }
