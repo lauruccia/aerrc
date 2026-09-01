@@ -30,14 +30,14 @@ class FlightStatusService
 
     public function __construct()
     {
-        $this->cacheTtl     = max(60, (int) env('FLIGHT_STATUS_CACHE_TTL', 7200));
-        $this->airportIata  = env('AIRPORT_IATA', 'REG');
+        $this->cacheTtl     = max(60, (int) config('aviationstack.cache_ttl', 7200));
+        $this->airportIata  = config('aviationstack.airport_iata', 'REG');
 
-        $this->airlabsKey   = env('AIRLABS_API_KEY');
+        $this->airlabsKey   = config('aviationstack.airlabs_api_key');
         $this->airlabsUrl   = 'https://airlabs.co/api/v9';
 
-        $this->aviationKey  = env('AVIATIONSTACK_API_KEY');
-        $this->aviationUrl  = env('AVIATIONSTACK_BASE_URL', 'https://api.aviationstack.com/v1');
+        $this->aviationKey  = config('aviationstack.api_key');
+        $this->aviationUrl  = config('aviationstack.base_url', 'https://api.aviationstack.com/v1');
     }
 
     // ─────────────────────────────────────────────────────────────
